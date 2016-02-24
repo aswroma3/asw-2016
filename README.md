@@ -13,7 +13,7 @@ da eseguire in un *ambiente distribuito*:
 * ogni ambiente di esecuzione distribuito è costituito 
   da alcune macchine virtuali create con 
   [VirtualBox](https://www.virtualbox.org/)
-  e [Vagrant](https://www.vagrantup.com/) - 
+  e [Vagrant](https://www.vagrantup.com/), 
   e accedute tramite [Git](https://git-scm.com/). 
 
 ## Software da installare 
