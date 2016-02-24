@@ -1,0 +1,8 @@
+# file e cartelle da ignorare TEMPORANEAMENTE 
+
+docker/
+
+# file e cartelle da ignorare DEFINITIVAMENTE 
+
+*.docx
+*.xlsx
