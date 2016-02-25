@@ -2,6 +2,7 @@
 
 private/
 .git/ 
+.gitignore
 **/.gitignore
 
 projects/**/.gradle/ 
