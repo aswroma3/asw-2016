@@ -1,5 +1,7 @@
 # file e cartelle da ignorare TEMPORANEAMENTE 
 
+# standalone/ 
+
 shared/ 
 
 apache-puppet/
@@ -11,7 +13,7 @@ docker/
 docker-swarm-consul/
 docker-swarm-token/
 java-ee/
-standalone/ 
+
 
 # file e cartelle da ignorare DEFINITIVAMENTE 
 
