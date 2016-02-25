@@ -7,11 +7,12 @@ tenuto dal prof. [Luca Cabibbo](http://cabibbo.dia.uniroma3.it/).
 
 Questo repository contiene il codice delle *esercitazioni* 
 del corso di [Architettura dei Sistemi Software](http://cabibbo.dia.uniroma3.it/asw/), 
-che sono relative a del semplice *software basato su middleware* e 
-da eseguire in un *ambiente distribuito*: 
+che sono relative a delle semplici *applicazioni software distribuite* 
+(basate sull'uso di *middleware*), 
+che vanno eseguite in degli opportuni *ambienti distribuiti*: 
 * il software è normalmente scritto in [Java](http://www.oracle.com/technetwork/java/index.html), 
   e costruito con [Gradle](http://gradle.org/); 
-* ogni ambiente di esecuzione distribuito è costituito 
+* ogni ambiente di esecuzione distribuito è composto 
   da alcune macchine virtuali create con 
   [VirtualBox](https://www.virtualbox.org/)
   e [Vagrant](https://www.vagrantup.com/), 
@@ -34,11 +35,11 @@ da eseguire in un *ambiente distribuito*:
 ## Organizzazione del repository 
 
 Questo repository è organizzato in diverse sezioni (cartelle): 
-* [projects](projects/) contiene il codice del *software basato su middleware*, 
+* [projects](projects/) contiene il codice delle *applicazioni distribuite*, 
   con una sottosezione (sottocartella) per ciascuno degli argomenti del corso; 
 * [environments](environments/) contiene il codice per la gestione degli *ambienti distribuiti*, 
   con una sottosezione (sottocartella) per ciascuno degli ambienti distribuiti 
-  su cui poter eseguire il software distribuito sviluppato. 
+  su cui poter eseguire le applicazioni distribuite sviluppate. 
 
 Queste due sezioni non sono indipendenti, ma correlate (in modo non banale). 
 Per esempio, il progetto **hello-rmi** (in [projects](projects/))

@@ -1,7 +1,7 @@
 # Progetti del corso di Architettura dei Sistemi Software 
 
 Questa sezione del repository contiene il codice (codice sorgente) 
-di alcune semplici applicazioni distribuite. 
+di alcune semplici *applicazioni software distribuite* e basate su *middleware*. 
 Ogni sottosezione (sottocartella) è relativa a un argomento delle esercitazioni del corso. 
 
 Attualmente non sono presenti tutti i progetti. 
