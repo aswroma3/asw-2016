@@ -28,21 +28,19 @@ Per gestire un ambiente bisogna:
 
 2. posizionarsi nella cartella dell'ambiente di interesse 
 
-3. per avviare o creare l'ambiente di esecuzione, usare il comando 
-
-       vagrant up 
+3. per avviare o creare l'ambiente di esecuzione, usare il comando `vagrant up` 
 
 4. per collegarsi con SSH a una macchina virtuale *VM* dell'ambiente, usare il comando 
 
-       vagrant ssh *VM* 
+       `vagrant ssh *VM*`
     
 E' anche possibile: 
 
 * arrestare l'ambiente di esecuzione, con il comando 
 
-      vagrant halt 
+      `vagrant halt`
 
 * distruggere l'ambiente di esecuzione, con il comando 
 
-      vagrant destroy -f  
+      `vagrant destroy -f`  
 
