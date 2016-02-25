@@ -1,6 +1,7 @@
 # Architettura dei Sistemi Software a Roma Tre 
 
-Benvenuti al repository del corso di [Architettura dei Sistemi Software](http://cabibbo.dia.uniroma3.it/asw/) 
+Benvenuti al repository del corso 
+di [Architettura dei Sistemi Software](http://cabibbo.dia.uniroma3.it/asw/) 
 a Roma Tre, 
 tenuto dal prof. [Luca Cabibbo](http://cabibbo.dia.uniroma3.it/). 
 
@@ -16,12 +17,11 @@ da eseguire in un *ambiente distribuito*:
   e [Vagrant](https://www.vagrantup.com/), 
   e accedute tramite [Git](https://git-scm.com/). 
 
-## Software da installare 
+## Software da installare sul proprio PC 
 
 ### Per lo sviluppo del software 
 
 * [Java SDK](http://www.oracle.com/technetwork/java/javase/) 
-* [Java EE](http://www.oracle.com/technetwork/java/javaee/)
 * [Gradle](http://gradle.org/) 
 * [Git](https://git-scm.com/) 
 
@@ -34,15 +34,21 @@ da eseguire in un *ambiente distribuito*:
 ## Organizzazione del repository 
 
 Questo repository è organizzato in diverse sezioni (cartelle): 
-* **projects** contiene il codice del *software basato su middleware* - 
+* [projects](projects/) contiene il codice del *software basato su middleware*, 
   con una sottosezione (sottocartella) per ciascuno degli argomenti del corso; 
-* **environments** contiene il codice per la gestione degli *ambienti distribuiti* - 
+* [environments](environments/) contiene il codice per la gestione degli *ambienti distribuiti*, 
   con una sottosezione (sottocartella) per ciascuno degli ambienti distribuiti 
-  su cui poter eseguire il software distribuito sviluppato 
+  su cui poter eseguire il software distribuito sviluppato. 
+
+Queste due sezioni non sono indipendenti, ma correlate (in modo non banale). 
+Per esempio, il progetto **hello-rmi** (in [projects](projects/))
+va eseguito nell'ambiente **client-server** (in [environments](environments/)). 
 
 Attualmente non sono presenti tutti i progetti e nemmeno tutti gli ambienti. 
 Verranno aggiunti a questo repository durante lo svolgimento del corso. 
 
-Queste due sezioni non sono indipendenti, ma correlate (in modo non banale). 
-Per esempio, il progetto **hello-rmi** (in **projects**)
-va eseguito nell'ambiente **client-server** (in **environments**). 
+## Accesso al repository 
+
+Per effettuare il download del repository, usare il seguente comando Git 
+dalla cartella locale in cui si vuole scaricare il repository: 
+    git clone https://github.com/aswroma3/asw 

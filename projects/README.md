@@ -9,4 +9,4 @@ Verranno aggiunti a questo repository durante lo svolgimento del corso.
 
 L'esecuzione dei progetti in questa sezione deve essere fatta 
 in un opportuno *ambiente di esecuzione*, 
-definito nella cartella [environments](../environments/) del repository. 
+definito nella cartella [environments/](../environments/) del repository. 

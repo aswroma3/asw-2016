@@ -1,8 +1,16 @@
+# file e cartelle da ignorare DEFINITIVAMENTE 
+
+private/
+.git/ 
+**/.gitignore
+
+projects/**/.gradle/ 
+projects/**/build/ 
+projects/**/dist/ 
+
+environments/**/.vagrant/ 
+
 # file e cartelle da ignorare TEMPORANEAMENTE 
 
 docker/
 
-# file e cartelle da ignorare DEFINITIVAMENTE 
-
-*.docx
-*.xlsx
