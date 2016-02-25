@@ -1,23 +1,4 @@
-# parti condivise 
-
-shared/resources/*
-
-# shared/scripts/common.sh
-# shared/scripts/setup-java.sh
-# shared/scripts/setup-gradle.sh
-
-shared/scripts/setup-consul.sh
-shared/scripts/setup-docker.sh
-shared/scripts/setup-docker-compose.sh
-shared/scripts/setup-java-ee.sh
-shared/scripts/setup-java-ee-appclient.sh
-shared/scripts/setup-server-hosts.sh
-shared/scripts/setup-swarm-hosts.sh
-shared/scripts/setup-virtualbox-guest-additions.sh
-
 # file e cartelle da ignorare TEMPORANEAMENTE 
-
-
 
 # standalone/ 
 
