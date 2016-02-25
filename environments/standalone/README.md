@@ -19,4 +19,4 @@ ha il seguente software
 ## Preparazione 
 
 Questo ambiente di esecuzione richiede la preparazione per Oracle Java SDK per Linux 
-descritta nella sezione [environments/](../environments/). 
+descritta nella sezione [environments/](../). 
