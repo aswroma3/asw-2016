@@ -17,8 +17,6 @@ subprojects {
     dependencies {
         testCompile 'junit:junit:4.12'
     }
-
-    version = '1.0'
 }
 
 /* 
@@ -47,10 +45,6 @@ task copyAppJarFiles(type: Copy, dependsOn: subprojects.build) {
     subprojects.each { subproject -> 
         from subproject.buildDir  
         include 'libs/**'
-        // leva il numero di versione dal file jar 
-        rename { String fileName ->
-            fileName.replace("-${subproject.version}", "")
-        }
     }
     into 'dist'
 }

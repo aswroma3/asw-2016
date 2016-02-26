@@ -1,12 +1,13 @@
 # file e cartelle da ignorare TEMPORANEAMENTE 
 
 # standalone/ 
+# client-server/
 
 apache-puppet/
 apache-puppetlabs-apache/
 apache-shell/
-client-server/
 coreos/
+developer/ 
 docker/
 docker-swarm-consul/
 docker-swarm-token/

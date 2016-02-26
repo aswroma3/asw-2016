@@ -2,10 +2,11 @@
 
 # asw-000-ciao-mondo/ 
 
-asw-libraries/
-libraries/
+# asw-libraries/
+# libraries/
 
-asw-810-introduzione/
+# asw-810-introduzione/
+
 asw-820-socket/
 asw-830-rmi/
 asw-840-jms/

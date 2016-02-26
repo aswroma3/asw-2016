@@ -56,3 +56,10 @@ E' anche possibile:
 
 * distruggere l'ambiente di esecuzione, con il comando `vagrant destroy -f`  
 
+## Ambienti 
+
+* [standalone](standalone/)
+  per l'esecuzione di applicazioni Java non distribuite   
+
+* [client-server](client-server/) 
+  per l'esecuzione di applicazioni Java distribuite di tipo client-server 

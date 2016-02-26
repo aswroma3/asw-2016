@@ -1,7 +1,12 @@
 # file e cartelle da ignorare DEFINITIVAMENTE 
 
 private/
+
 .git/ 
+
+eclipse/
+projects/**/.project 
+projects/**/.settings/
 
 projects/**/.gradle/ 
 projects/**/build/ 
