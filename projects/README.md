@@ -68,3 +68,17 @@ La modalità specifica di esecuzione delle applicazioni distribuite
 varia in modo significativo da progetto a progetto, 
 ed è descritta nell'ambito dei singoli progetti. 
 
+## Progetti 
+
+* [asw-000-ciao-mondo](asw-000-ciao-mondo/): un semplice progetto di prova 
+
+* [asw-810-introduzione](asw-810-introduzione/): introduzione ai connettori  
+
+## Libreria 
+
+Questa sezione del repository contiene anche delle librerie usate 
+da alcune di queste applicazioni. 
+
+* [asw-libraries](asw-libraries/): il codice sorgente delle librerie
+
+* [libraries](libraries/): i file jar delle librerie  
