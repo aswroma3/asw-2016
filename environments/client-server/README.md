@@ -25,8 +25,6 @@ ed ha il seguente software:
 
 * Oracle Java SDK 
   
-* Gradle 
-
 ## Preparazione 
 
 Questo ambiente di esecuzione richiede la preparazione per Oracle Java SDK per Linux 

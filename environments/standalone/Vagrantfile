@@ -1,5 +1,5 @@
 # 
-# Vagrantfile per un singolo nodo (node), con Oracle Java e Gradle. 
+# Vagrantfile per un singolo nodo (node), con Oracle Java. 
 # 
 
 VAGRANTFILE_API_VERSION = "2"
@@ -23,7 +23,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #
     # Configurazione del nodo "node", che prevede: 
     # - Oracle Java SDK 8 
-    # - Gradle 
     #
     config.vm.define "node" do |node|
         node.vm.hostname = "node"    
@@ -39,7 +38,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # provisioning con bash 
         node.vm.provision :shell, :inline => 'apt-get update'
         node.vm.provision :shell, path: "../shared/scripts/setup-java.sh"
-        node.vm.provision :shell, path: "../shared/scripts/setup-gradle.sh"
   
         node.vm.provision :shell, 
             inline: "echo  'configurazione nodo node completata'"

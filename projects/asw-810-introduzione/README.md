@@ -13,7 +13,7 @@ per introdurre l'uso dei **connettori**:
 
 * **e-spring** 
 
-* ** f-proxy**
+* **f-proxy**
 
 * **g-client-server** 
 

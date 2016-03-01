@@ -48,7 +48,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #
     # Configurazione del nodo "client", che prevede: 
     # - Oracle Java SDK 8 
-    # - Gradle 
     #
     config.vm.define "client" do |node|
         node.vm.hostname = "client"    
@@ -64,7 +63,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # provisioning con bash 
         node.vm.provision :shell, :inline => 'apt-get update'
         node.vm.provision :shell, path: "../shared/scripts/setup-java.sh"
-        node.vm.provision :shell, path: "../shared/scripts/setup-gradle.sh"
   
         node.vm.provision :shell, 
             inline: "echo  'configurazione nodo client completata'"
