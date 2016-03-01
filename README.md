@@ -55,6 +55,10 @@ dalla cartella locale in cui si vuole scaricare il repository:
 
     git clone https://github.com/aswroma3/asw 
 
+Oppure (se il sistema host è Windows): 
+
+    git clone --config core.autocrlf=input https://github.com/aswroma3/asw 
+
 Per aggiornare il contenuto della propria copia locale del repository, 
 usare il seguente comando Git dalla cartella locale in cui è stato scaricato il repository: 
 
