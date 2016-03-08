@@ -75,18 +75,7 @@ project(':client') {
     apply plugin: 'application' 
     
     mainClassName = "asw.intro.client.Main"
-    
-    apply plugin: 'distribution' 
-
-    distributions {
-        main {
-            baseName = archivesBaseName 
-            
-            contents {
-                from { libsDir }
-            }
-        }
-    }    
+ 
 }
 
 /* 
@@ -155,6 +144,7 @@ task copyClientLibFiles(type: Copy) {
         into 'dist/client/libs'
     }
 }
+
 task copyClientScripts(type: Copy) {
     from 'scripts/client' 
     into 'dist/client'
