@@ -33,23 +33,28 @@ utilizzando **Gradle**.
 
 Per compilare un'applicazione bisogna: 
 
-1. usare una shell del proprio PC 
+1. collegarsi con `vagrant ssh` alla macchina virtuale **dev** 
+   dell'ambiente [developer](../environments/developer/), su cui sono installati *Java SDK* e *Gradle* 
 
-2. posizionarsi nella cartella dell'applicazione di interesse 
-
-3. per compilare e assemblare l'applicazione, usare il comando `gradle build` 
-
-In alternativa: 
-
-1. collegarsi con `vagrant ssh` ad una macchina virtuale con Java SDK e Gradle 
-
-2. posizionarsi nella cartella dell'applicazione di interesse 
+2. posizionarsi nella cartella principale dell'applicazione di interesse 
 
 3. per compilare e assemblare l'applicazione, usare il comando `gradle build` 
+
+In alternativa, è possibile compilare un'applicazione sul proprio PC 
+
+1. installare e configurare *Java SDK* 
+
+2. installare e configurare *Gradle* 
+
+3. usare una shell del proprio PC 
+
+4. posizionarsi nella cartella principale dell'applicazione di interesse 
+
+5. per compilare e assemblare l'applicazione, usare il comando `gradle build` 
 
 E' anche possibile: 
 
-* ripulire la build, con il comando `gradle clean`
+* ripulire la build di un'applicazione, con il comando `gradle clean`
 
 
 ## Esecuzione 
