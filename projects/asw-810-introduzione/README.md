@@ -25,23 +25,23 @@ Ne descriviamo l'uso separatamente
 
 ### Build  
 
-Per la costruzione dell'applicazione, vedere le istruzioni 
-descritta nella sezione [projects/](../). 
+Per la costruzione di ciascuna applicazione, vedere le istruzioni 
+descritte nella sezione [projects/](../). 
 
 ### Componenti eseguibili 
 
-Queste applicazioni sono composte da un unico componente eseguibile, 
+Ciascuna di queste applicazioni è composta da un unico componente eseguibile, 
 che dopo la costruzione è presente nella cartella **dist** dell'applicazione. 
 
 ### Ambiente di esecuzione 
 
-Queste applicazioni possono essere eseguite nell'ambiente 
+Ciascuna di queste applicazioni può essere eseguita nell'ambiente 
 [standalone](../../environments/standalone/), 
 sul nodo **node**. 
 
 ### Esecuzione 
 
-Per eseguire l'applicazione **ciao-mondo**: 
+Per eseguire un'applicazione: 
 
 1. posizionarsi nella cartella **dist** dell'applicazione 
 

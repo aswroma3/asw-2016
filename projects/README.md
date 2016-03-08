@@ -74,6 +74,8 @@ ed è descritta nell'ambito dei singoli progetti.
 
 * [asw-810-introduzione](asw-810-introduzione/): introduzione ai connettori  
 
+* [asw-820-socket](asw-820-socket/): comunicazione interprocesso e socket  
+
 ## Libreria 
 
 Questa sezione del repository contiene anche delle librerie usate 
