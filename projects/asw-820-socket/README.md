@@ -1,14 +1,21 @@
 # asw-820-socket
 
 Questo progetto contiene alcune applicazioni distribuite 
+di tipo **client-server**
 che esemplificano la comunicazione interprocesso 
 basata su **socket**: 
 
-* **a-client-server-udp**
+* **a-client-server-udp** 
+  una semplice applicazione client-server, 
+  con un server *sequenziale* e *stateless* basato su *UDP* 
 
 * **b-client-server-tcp**
+  una semplice applicazione client-server, 
+  con un server *concorrente* e *stateless* basato su *TCP* 
 
 * **c-stateful-service** 
+  una semplice applicazione client-server, 
+  con un server *concorrente* e *stateful* basato su *TCP* 
 
 Le diverse applicazioni hanno una struttura simile, 
 e la loro costruzione ed esecuzione è descritta qui di seguito. 
