@@ -6,8 +6,6 @@
  * - gradle clean cancella i jar file e la distribuzione 
  */ 
  
-apply plugin: 'eclipse'
-
 // caratteristiche comuni a tutti i sotto-progetti 
 subprojects {
     apply plugin: 'java'

@@ -1,5 +1,6 @@
 # file e cartelle da ignorare DEFINITIVAMENTE 
 
+# la cartella con la mia documentazione su questo repository
 private/
 
 .git/ 

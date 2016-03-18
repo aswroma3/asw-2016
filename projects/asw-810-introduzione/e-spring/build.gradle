@@ -11,8 +11,6 @@
  * - gradle clean cancella i jar file e la distribuzione 
  */ 
  
-apply plugin: 'eclipse'
-
 // caratteristiche comuni a tutti i sotto-progetti 
 subprojects {
     apply plugin: 'java'
@@ -36,11 +34,11 @@ subprojects {
 project(':app') {
     dependencies {
         compile 'asw:asw-util:latest'
-        compile 'org.springframework:spring-context:4.2.1.RELEASE'
+        compile 'org.springframework:spring-context:4.2.5.RELEASE'
         runtime 'asw:asw-util:latest'
-        runtime 'org.springframework:spring-context:4.2.1.RELEASE'
+        runtime 'org.springframework:spring-context:4.2.5.RELEASE'
         archives 'asw:asw-util:latest'
-        archives 'org.springframework:spring-context:4.2.1.RELEASE'
+        archives 'org.springframework:spring-context:4.2.5.RELEASE'
     }
 
     jar {

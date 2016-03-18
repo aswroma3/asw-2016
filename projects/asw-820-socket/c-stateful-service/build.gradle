@@ -6,8 +6,6 @@
  * - gradle clean cancella i jar file e la distribuzione 
  */ 
  
-apply plugin: 'eclipse'
-
 /* progetti i cui jar che devono essere rilasciati lato server o client */ 
 def serverSideProjects = [':service', ':service-impl', ':server']
 def clientSideProjects = [':client', ':service']
