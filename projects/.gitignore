@@ -1,0 +1,24 @@
+# file e cartelle da ignorare TEMPORANEAMENTE 
+
+# asw-000-ciao-mondo/ 
+
+# asw-libraries/
+# libraries/
+
+# asw-810-introduzione/
+# asw-820-socket/
+
+asw-830-rmi/
+asw-840-jms/
+asw-850-ejb/
+asw-860-ws/
+asw-870-rest/
+
+
+# file e cartelle da ignorare DEFINITIVAMENTE 
+
+asw-870-rest-altri/
+asw-xxx-docker/
+esperimenti/
+zzz-altri/ 
+

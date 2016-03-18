@@ -1,0 +1,138 @@
+/* 
+ * Gradle build file per una semplice applicazione Java multi-progetto. 
+ * 
+ * Diversamente da altri build file in questa sezione, 
+ * contiene il supporto per Spring, 
+ * con le dipendenze di compilazione, rilascio ed esecuzione, 
+ * ed un modo diverso di creare la distribuzione. 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle run manda in esecuzione l'applicazione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+ 
+// caratteristiche comuni a tutti i sotto-progetti 
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        flatDir { 
+           dirs "../../../libraries"
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
+
+/* 
+ * SOTTO PROGETTI 
+ */ 
+
+project(':app') {
+    dependencies {
+        compile 'asw:asw-util:latest'
+        compile 'org.springframework:spring-context:4.2.5.RELEASE'
+        runtime 'asw:asw-util:latest'
+        runtime 'org.springframework:spring-context:4.2.5.RELEASE'
+        archives 'asw:asw-util:latest'
+        archives 'org.springframework:spring-context:4.2.5.RELEASE'
+    }
+
+    jar {
+        manifest {
+            attributes 'Main-Class': 'asw.intro.main.Main'
+            attributes 'Class-Path': 'asw-util.jar' 
+        }
+    }
+
+    apply plugin: 'application'     
+    mainClassName = "asw.intro.main.Main"
+
+    apply plugin: 'distribution' 
+    distTar.enabled = false 
+
+    distributions {
+        main {
+            baseName = archivesBaseName 
+            
+            contents {
+                from { libsDir }
+            }
+        }
+    }    
+
+}
+
+
+/* 
+ * DISTRIBUZIONE e BUILD 
+ */ 
+
+// copia nella cartella dist i file zip delle distribuzioni dei sotto-progetti  
+// (in questo caso solo di app) 
+task copyAppDistribution(type: Copy, dependsOn: subprojects.build) {
+    setIncludeEmptyDirs(false)
+    subprojects.each { subproject -> 
+        from subproject.buildDir  
+        include 'distributions/*.zip'
+    }
+    into 'dist'
+    eachFile { f -> 
+        // println f.path 
+        def targetPath = plainPath(f.path) 
+        f.path = targetPath
+    }
+}
+
+// trasforma il path distributions/xxx.xxx in xxx.xxx 
+def plainPath(def path) {
+    def modified = path.replaceAll('distributions/', {""})
+    return modified
+}
+
+// scompatta i file zip della distribuzione 
+task unzipAppDistribution(type: Copy, dependsOn: copyAppDistribution) {
+    from ( zipTree('dist/app.zip') ) 
+    into 'dist' 
+}
+
+task deleteAppDistribution(type: Delete, dependsOn: unzipAppDistribution) {
+    delete fileTree('dist') {
+        include '*.zip'
+    }
+}
+
+// copia nella cartella dist tutti gli script  
+task copyAppScripts(type: Copy) {
+    from 'scripts' 
+    into 'dist'
+}
+
+// copia nella cartella dist tutte le altre risorse   
+task copyAppResources(type: Copy) {
+    from 'resources' 
+    into 'dist'
+}
+
+// copia tutti i file di interesse nella cartella dist 
+task dist(dependsOn: [unzipAppDistribution, deleteAppDistribution, copyAppScripts, copyAppResources]) {
+}
+
+task build(dependsOn: dist) {
+}
+
+/* 
+ * CLEAN 
+ * necessario perché il progetto principale non è un progetto Java 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "dist"
+    delete dirName
+}
+
+task clean(dependsOn: deleteDist) {
+}

@@ -1,0 +1,104 @@
+/* 
+ * Gradle build file per una semplice applicazione Java multi-progetto. 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle run manda in esecuzione l'applicazione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+ 
+// caratteristiche comuni a tutti i sotto-progetti 
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        flatDir { 
+           dirs "../../../libraries"
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
+
+/* 
+ * SOTTO PROGETTI 
+ */ 
+
+project(':app') {
+
+    configurations {
+        libs
+    }
+    
+    dependencies {
+        compile 'asw:asw-util:latest'
+        runtime 'asw:asw-util:latest'
+        libs 'asw:asw-util:latest'
+    }
+
+    jar {
+        manifest {
+            attributes 'Main-Class': 'asw.intro.main.Main'
+            attributes 'Class-Path': 'asw-util.jar' 
+        }
+    }
+
+    apply plugin: 'application'     
+    mainClassName = "asw.intro.main.Main"
+
+}
+
+/* 
+ * DISTRIBUZIONE e BUILD 
+ */ 
+
+// copia nella cartella dist i file jar di tutti i sotto-progetti  
+task copyAppJarFiles(type: Copy, dependsOn: subprojects.build) {
+    subprojects.each { subproject -> 
+        from subproject.buildDir  
+        include 'libs/**'
+    }
+    into 'dist'
+}
+
+// copia nella cartella dist tutti gli script  
+task copyAppScripts(type: Copy) {
+    from 'scripts' 
+    into 'dist'
+}
+
+// copia nella cartella dist tutte le altre risorse   
+task copyAppResources(type: Copy) {
+    from 'resources' 
+    into 'dist'
+}
+
+// copia nella cartella dist i file jar delle librerie di interesse  
+task copyLibFiles(type: Copy) {
+    subprojects.each { subproject -> 
+        from subproject.configurations.libs 
+        into 'dist/libs'
+    }
+}
+
+// copia tutti i file di interesse nella cartella dist 
+task dist(dependsOn: [copyAppJarFiles, copyAppScripts, copyAppResources, copyLibFiles]) {
+}
+
+task build(dependsOn: [dist, subprojects.installDist]) {
+}
+
+/* 
+ * CLEAN 
+ * necessario perché il progetto principale non è un progetto Java 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "dist"
+    delete dirName
+}
+
+task clean(dependsOn: deleteDist) {
+}

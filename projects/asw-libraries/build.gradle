@@ -1,0 +1,107 @@
+/* 
+ * Gradle build file per la libreria asw-util. 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+
+apply plugin: 'eclipse' 
+
+/* 
+ * caratteristiche comuni a tutti i sotto-progetti 
+ */ 
+subprojects {
+
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    // la versione fa riferimento a
+    // - le ultime due cifre dell'anno 1.6.x
+    // - il mese in cui è stata realizzata x.x.2 
+    version = '1.6.2' 
+    
+}
+
+/* 
+ * ASW-UTIL 
+ */ 
+
+project(':asw-util') {
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
+
+
+/* 
+ * ASW-JMS 
+ */ 
+
+project(':asw-jms') {
+
+    dependencies {
+        compile project(':asw-util')
+        compile 'javax.jms:javax.jms-api:2.0.1'
+    }
+
+    jar {
+        manifest {
+            attributes 'Class-Path': 'asw-util.jar' 
+        }
+    }
+}
+
+/* 
+ * DISTRIBUZIONE e BUILD 
+ */ 
+
+// copia la libreria nella cartella libraries  
+task copyLibJarFiles(type: Copy, dependsOn: subprojects.build) {
+    subprojects.each { subproject -> 
+        from subproject.libsDir  
+        include '**'
+    }
+    into '../libraries'
+}
+
+task copyLibJarFilesNoVersion(type: Copy, dependsOn: subprojects.build) {
+    subprojects.each { subproject -> 
+        from subproject.libsDir  
+        include '**'
+        // leva il numero di versione dal file jar 
+        rename { String fileName ->
+            fileName.replace("-${subproject.version}", "")
+        }
+    }
+    into '../libraries'
+}
+
+// copia nella cartella libraries tutte le altre risorse   
+task copyLibResources(type: Copy) {
+    from 'resources' 
+    into '../libraries'
+}
+
+// copia tutti i file di interesse nella cartella dist 
+task dist(dependsOn: [copyLibJarFiles, copyLibJarFilesNoVersion, copyLibResources]) {
+}
+
+task build(dependsOn: dist) {
+}
+
+/* 
+ * CLEAN 
+ * necessario perché il progetto principale non è un progetto Java 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "../libraries"
+    delete fileTree(dir: dirName, include: 'asw-*.*')
+}
+
+task clean(dependsOn: deleteDist) {
+}

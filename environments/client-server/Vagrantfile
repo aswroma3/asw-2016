@@ -1,0 +1,72 @@
+# 
+# Vagrantfile per i progetti client-server (per esempio, il progetto asw-830-rmi), che prevedono:
+# - un nodo server 
+# - un nodo client 
+# 
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    # Configurazioni comuni.
+
+    # Ubuntu trusty 64 VirtualBox.
+    config.vm.box = "ubuntu/trusty64"
+
+    # folder per i progetti Asw (/home/vagrant/projects)
+    config.vm.synced_folder "../../projects/", "/home/vagrant/projects", :mount_options => ["dmode=777", "fmode=777"]
+
+    # folder per le risorse condivise per gli ambienti Asw (/home/vagrant/shared/resources e /home/vagrant/shared/scripts) 
+    config.vm.synced_folder "../shared/", "/home/vagrant/shared", :mount_options => ["dmode=777", "fmode=777"]
+
+    # folder per i progetti docker Asw (/home/vagrant/docker)
+    # config.vm.synced_folder "../../docker/", "/home/vagrant/docker", :mount_options => ["dmode=777", "fmode=777"]
+
+    #
+    # Configurazione del nodo "server", che prevede: 
+    # - Oracle Java SDK 8 
+    #
+    config.vm.define "server" do |node|
+        node.vm.hostname = "server"    
+        node.vm.network "private_network", ip: "10.11.1.101", virtualbox__intnet: true
+
+        node.vm.provider "virtualbox" do |v| 
+            v.memory = 1024 
+        end 
+
+        node.vm.network "forwarded_port", guest: 22, host: 2211, id: 'ssh', auto_correct: true
+        node.ssh.forward_agent = true
+ 
+        # provisioning con bash 
+        node.vm.provision :shell, :inline => 'apt-get update'
+        node.vm.provision :shell, path: "../shared/scripts/setup-java.sh"
+  
+        node.vm.provision :shell, 
+            inline: "echo  'configurazione nodo server completata'"
+
+    end
+
+    #
+    # Configurazione del nodo "client", che prevede: 
+    # - Oracle Java SDK 8 
+    #
+    config.vm.define "client" do |node|
+        node.vm.hostname = "client"    
+        node.vm.network "private_network", ip: "10.11.1.201", virtualbox__intnet: true
+
+        node.vm.provider "virtualbox" do |v| 
+            v.memory = 1024 
+        end 
+
+        node.vm.network "forwarded_port", guest: 22, host: 2221, id: 'ssh', auto_correct: true
+        node.ssh.forward_agent = true
+ 
+        # provisioning con bash 
+        node.vm.provision :shell, :inline => 'apt-get update'
+        node.vm.provision :shell, path: "../shared/scripts/setup-java.sh"
+  
+        node.vm.provision :shell, 
+            inline: "echo  'configurazione nodo client completata'"
+
+    end
+
+end
