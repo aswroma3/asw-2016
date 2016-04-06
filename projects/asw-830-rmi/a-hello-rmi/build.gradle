@@ -1,0 +1,187 @@
+/* 
+ * Gradle build file per un'applicazione Java multi-progetto
+ * di tipo client-server. 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+ 
+/* progetti i cui jar che devono essere rilasciati lato server o client */ 
+def serverSideProjects = [':service', ':service-impl', 'server']
+def clientSideProjects = [':service', ':client']
+
+/* main class lato server e lato client */ 
+def serverSideMainClass = 'asw.rmi.hello.server.HelloServer'
+def clientSideMainClass = 'asw.rmi.hello.client.HelloClient'
+
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        flatDir { 
+           dirs "../../../libraries"
+        }
+        mavenCentral()
+    }
+
+    configurations {
+        libs
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
+
+project(':service') {
+}
+
+project(':service-impl') {
+    dependencies {
+        compile project(':service')
+        compile 'asw:asw-util:latest'
+        libs 'asw:asw-util:latest'
+    }
+    jar {
+        manifest {
+            attributes 'Class-Path': 'asw-util.jar service.jar'
+        }
+    }
+}
+
+project(':server') {
+    dependencies {
+        compile project(':service')
+        compile project(':service-impl')
+        compile 'asw:asw-util:latest'
+        runtime 'asw:asw-util:latest'
+        libs 'asw:asw-util:latest'
+    }
+    jar {
+        manifest {
+            attributes 'Main-Class': serverSideMainClass
+            attributes 'Class-Path': 'asw-util.jar service.jar service-impl.jar'
+        }
+    }
+}
+
+project(':client') {
+    dependencies {
+        compile project(':service')
+        compile 'asw:asw-util:latest'
+        runtime 'asw:asw-util:latest'
+        libs 'asw:asw-util:latest'
+    }
+    jar {
+        manifest {
+            attributes 'Main-Class': clientSideMainClass
+            attributes 'Class-Path': 'asw-util.jar service.jar' 
+        }
+    }
+}
+
+/* 
+ * DISTRIBUZIONE - SERVER 
+ */ 
+
+// copia nella cartella dist/server tutti i file di interesse  
+
+task copyServerJarFiles(type: Copy, dependsOn: subprojects.build) {
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.buildDir  
+            include 'libs/**'
+        }
+        into 'dist/server'
+    }
+}
+
+// copia nella cartella dist i file jar delle librerie di interesse  
+task copyServerLibFiles(type: Copy) {
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.configurations.libs  
+            include '**'
+        }
+        into 'dist/server/libs'
+    }
+}
+
+task copyServerScripts(type: Copy) {
+    from 'scripts/server' 
+    into 'dist/server'
+}
+
+task copyServerResources(type: Copy) {
+    from 'resources/server' 
+    into 'dist/server'
+}
+
+task serverDist(dependsOn: [copyServerJarFiles, copyServerLibFiles, copyServerScripts, copyServerResources]) {
+}
+
+/* 
+ * DISTRIBUZIONE - CLIENT 
+ */ 
+
+// copia nella cartella dist/client tutti i file di interesse  
+
+task copyClientJarFiles(type: Copy, dependsOn: subprojects.build) {
+    clientSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.buildDir  
+            include 'libs/**'
+        }
+        into 'dist/client'
+    }
+}
+
+// copia nella cartella dist i file jar delle librerie di interesse  
+task copyClientLibFiles(type: Copy) {
+    clientSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.configurations.libs  
+            include '**'
+        }
+        into 'dist/client/libs'
+    }
+}
+
+task copyClientScripts(type: Copy) {
+    from 'scripts/client' 
+    into 'dist/client'
+}
+
+task copyClientResources(type: Copy) {
+    from 'resources/client' 
+    into 'dist/client'
+}
+
+task clientDist(dependsOn: [copyClientJarFiles, copyClientLibFiles, copyClientScripts, copyClientResources]) {
+}
+
+/* 
+ * DISTRIBUZIONE e BUILD 
+ */ 
+
+task dist(dependsOn: [serverDist, clientDist]) {
+}
+
+task build(dependsOn: dist) {
+}
+
+
+/*
+ * CLEAN 
+ * necessario perché il progetto principale non è un progetto Java 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "dist"
+    delete dirName
+}
+
+task clean(dependsOn: deleteDist) {
+}
+

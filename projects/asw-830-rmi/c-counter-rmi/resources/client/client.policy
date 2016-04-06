@@ -1,0 +1,3 @@
+grant codeBase "file:/home/vagrant/projects/asw-830-rmi/c-counter-rmi/dist/client/libs/-" {
+    permission java.security.AllPermission;
+};

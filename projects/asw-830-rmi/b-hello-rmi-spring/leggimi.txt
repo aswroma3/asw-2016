@@ -1,0 +1,6 @@
+Le fonti per questi esempio sono: 
+- spring 4 in action 
+- la documentazione di spring su spring rmi 
+- questa sintesi: http://snehaprashant.blogspot.it/2009/05/rmi-using-spring.html 
+  che in particolare descrive il codice necessario per il server/exporter 
+

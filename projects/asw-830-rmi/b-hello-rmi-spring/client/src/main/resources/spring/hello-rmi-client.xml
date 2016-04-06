@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans.xsd">
+  <bean id="helloclient" class="asw.springrmi.hello.client.HelloClient">
+    <property name="hello" ref="helloService"/>
+  </bean>
+  <bean id="helloService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+    <property name="serviceUrl" value="rmi://10.11.1.101:1199/asw/springrmi/Hello"/>
+    <!-- property name="serviceUrl" value="rmi://localhost:1199/asw/springrmi/Hello"/ -->
+    <property name="serviceInterface" value="asw.springrmi.hello.service.Hello"/>
+  </bean>
+</beans>

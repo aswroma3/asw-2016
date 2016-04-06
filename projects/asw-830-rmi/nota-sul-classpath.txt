@@ -1,0 +1,12 @@
+http://stackoverflow.com/questions/20967220/is-it-necessary-important-to-set-a-classpath-in-the-rmi-registry 
+
+il classpath va "resettato" se: 
+- il registry è avviato dalla radice del file java 
+- si usa il codebase 
+- il registry è avviato dal programma java per il server 
+
+altrimenti va settato 
+
+inoltre, il classpath usa come separatore: 
+- : su linux 
+- ; su windows 

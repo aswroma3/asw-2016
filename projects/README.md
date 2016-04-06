@@ -81,6 +81,8 @@ ed è descritta nell'ambito dei singoli progetti.
 
 * [asw-820-socket](asw-820-socket/): comunicazione interprocesso e socket  
 
+* [asw-830-rmi](asw-830-rmi/): oggetti distribuiti e invocazione remota 
+
 ## Libreria 
 
 Questa sezione del repository contiene anche delle librerie usate 

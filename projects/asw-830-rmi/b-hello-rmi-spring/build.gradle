@@ -1,0 +1,238 @@
+/* 
+ * Gradle build file per un'applicazione Java client-server multi-progetto. 
+ * Diversamente da altri build file, contiene il supporto per Spring, 
+ * con le dipendenze di compilazione, rilascio ed esecuzione, 
+ * ed un modo diverso di creare la distribuzione. 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+ 
+/* progetti le cui distribuzioni devono essere rilasciate lato server o client */ 
+def serverSideProjects = [':server']
+def clientSideProjects = [':client']
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        flatDir { 
+           dirs "../../../libraries"
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
+
+project(':service') {
+}
+
+project(':service-impl') {
+    dependencies {
+        compile project(':service')
+        compile 'asw:asw-util:latest'
+    }
+    jar {
+        manifest {
+            attributes 'Class-Path': 'asw-util.jar service.jar'
+        }
+    }
+}
+
+project(':server') {
+    dependencies {
+        compile 'org.springframework:spring-context:4.2.5.RELEASE'
+        runtime 'org.springframework:spring-context:4.2.5.RELEASE'
+        archives 'org.springframework:spring-context:4.2.5.RELEASE'
+        compile project(':service')
+        compile project(':service-impl')
+        compile 'asw:asw-util:latest'
+        runtime 'asw:asw-util:latest'
+        archives 'asw:asw-util:latest'
+    }
+    jar {
+        manifest {
+            attributes 'Main-Class': 'asw.springrmi.hello.server.HelloExporter'
+            attributes 'Class-Path': 'asw-util.jar service.jar service-impl.jar'
+        }
+    }
+    
+    apply plugin: 'application' 
+    
+    mainClassName = "asw.springrmi.hello.server.HelloExporter"
+    
+    applicationDefaultJvmArgs = ["-Djava.rmi.server.hostname=10.11.1.101"]
+    
+    apply plugin: 'distribution' 
+    distTar.enabled = false 
+
+    distributions {
+        main {
+            baseName = archivesBaseName 
+            
+            contents {
+                from { libsDir }
+            }
+        }
+    }    
+}
+
+project(':client') {
+    dependencies {
+        compile 'org.springframework:spring-context:4.2.5.RELEASE'
+        runtime 'org.springframework:spring-context:4.2.5.RELEASE'
+        archives 'org.springframework:spring-context:4.2.5.RELEASE'
+        compile project(':service')
+        compile 'asw:asw-util:latest'
+        runtime 'asw:asw-util:latest'
+        archives 'asw:asw-util:latest'
+    }
+    jar {
+        manifest {
+            attributes 'Main-Class': 'asw.springrmi.hello.main.Main'
+            attributes 'Class-Path': 'asw-util.jar service.jar' 
+        }
+    }
+    apply plugin: 'application' 
+    
+    mainClassName = "asw.springrmi.hello.main.Main"
+    
+    applicationDefaultJvmArgs = ["-Dsun.rmi.transport.tcp.responseTimeout=5000"]
+
+    apply plugin: 'distribution' 
+    distTar.enabled = false 
+
+    distributions {
+        main {
+            baseName = archivesBaseName 
+            
+            contents {
+                from { libsDir }
+            }
+        }
+    }    
+}
+
+/* 
+ * DISTRIBUZIONE - SERVER  
+ */ 
+
+// copia nella cartella dist/server tutti i file di interesse 
+
+task copyServerDistribution(type: Copy, dependsOn: subprojects.build) {
+    setIncludeEmptyDirs(false)
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.buildDir  
+            include 'distributions/*.zip'
+        }
+        into 'dist/server'
+        eachFile { f -> 
+            // println f.path 
+            def targetPath = plainPath(f.path) 
+            f.path = targetPath
+        }
+    }
+}
+
+// trasforma il path distributions/xxx.xxx in xxx.xxx 
+def plainPath(def path) {
+    def modified = path.replaceAll('distributions/', {""})
+    return modified
+}
+
+// scompatta i file zip della distribuzione 
+task unzipServerDistribution(type: Copy, dependsOn: copyServerDistribution) {
+    from ( zipTree('dist/server/server.zip') ) 
+    into 'dist/server' 
+}
+
+task deleteServerDistributionZipFile(type: Delete, dependsOn: unzipServerDistribution) {
+    delete fileTree('dist/server') {
+        include '*.zip'
+    }
+}
+
+task copyServerScripts(type: Copy) {
+    from 'scripts/server' 
+    into 'dist/server'
+}
+
+task copyServerResources(type: Copy) {
+    from 'resources/server' 
+    into 'dist/server'
+}
+
+task uploadServerDist(dependsOn: [unzipServerDistribution, deleteServerDistributionZipFile, copyServerScripts, copyServerResources]) {
+}
+
+/* 
+ * DISTRIBUZIONE - CLIENT  
+ */ 
+
+// copia nella cartella dist/client tutti i file di interesse 
+
+task copyClientDistribution(type: Copy, dependsOn: subprojects.build) {
+    setIncludeEmptyDirs(false)
+    clientSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.buildDir  
+            include 'distributions/*.zip'
+        }
+        into 'dist/client'
+        eachFile { f -> 
+            // println f.path 
+            def targetPath = plainPath(f.path) 
+            f.path = targetPath
+        }
+    }
+}
+
+task unzipClientDistribution(type: Copy, dependsOn: copyClientDistribution) {
+    from ( zipTree('dist/client/client.zip') ) 
+    into 'dist/client' 
+}
+
+task deleteClientDistributionZipFile(type: Delete, dependsOn: unzipClientDistribution) {
+    delete fileTree('dist/client') {
+        include '*.zip'
+    }
+}
+
+task copyClientScripts(type: Copy) {
+    from 'scripts/client' 
+    into 'dist/client'
+}
+
+task copyClientResources(type: Copy) {
+    from 'resources/client' 
+    into 'dist/client'
+}
+
+task uploadClientDist(dependsOn: [unzipClientDistribution, deleteClientDistributionZipFile, copyClientScripts, copyClientResources]) {
+}
+
+/* 
+ * BUILD 
+ */ 
+
+task dist(dependsOn: [uploadServerDist, uploadClientDist]) {
+}
+
+task build(dependsOn: dist) {
+}
+
+/* 
+ * CLEAN 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "dist"
+    delete dirName
+}
+
+task clean(dependsOn: deleteDist) {
+}
