@@ -1,0 +1,47 @@
+==============================
+CONFIGURAZIONE DEL SERVER 
+==============================
+
+il server ha bisogno della seguente voce nel file /etc/hosts 
+10.11.1.101 server server 
+
+invece bisogna levare dal file /etc/hosts la seguente voce (che è aggiunta per default) 
+127.0.1.1 server server 
+
+inoltre credo sia necessario indicare l'indirizzo ip del server nel file domain.xml nel dominio domain1 
+(ma forse no, dovrei provare) 
+
+forse inoltre queste voci possono essere modificate da comandi asadmin, anziché copiando l'intero file 
+(dovrei provare) 
+
+le voci da modificare sono: 
+  <nodes>
+    <node name="server-domain1" type="CONFIG" node-host="10.11.1.101" install-dir="${com.sun.aas.productRoot}"/>
+  </nodes>
+
+     <config name="default-config" dynamic-reconfiguration-enabled="true" >
+         <jms-service type="EMBEDDED" default-jms-host="default_JMS_host" addresslist-behavior="priority">
+             <jms-host name="default_JMS_host" host="10.11.1.101" port="${JMS_PROVIDER_PORT}" admin-user-name="admin" admin-password="admin" lazy-init="true"/>
+         </jms-service>
+    </config>
+
+all'avvio è poi possibile generare l'appclient da usare nel client 
+
+così funziona: 
+
+# in realtà è sufficiente solo la seconda 
+asadmin set configs.config.default-config.jms-service.jms-host.default_JMS_host.host=10.11.1.101
+asadmin set configs.config.server-config.jms-service.jms-host.default_JMS_host.host=10.11.1.101
+
+
+==============================
+CONFIGURAZIONE DEL CLIENT  
+==============================
+
+ha bisogno dell'appclient generato sul server 
+
+inoltre credo sia anche necessario un file che indica la posizione del server 
+(ma forse no, dovrei provare) 
+
+utile anche gradle per compilare il client del web service soap (che vuole wsimport) 
+

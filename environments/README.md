@@ -13,21 +13,11 @@ definiti nella cartella [projects/](../projects/) del repository.
 
 ## Preparazione 
 
-Molti ambienti di esecuzione richiedono di scaricare 
-il file di installazione di Oracle Java SDK per Linux 
-dal sito di Java: 
-[www.oracle.com/technetwork/java/javase/](http://www.oracle.com/technetwork/java/javase/downloads/index.html). 
-In particolare, bisogna scaricare **JDK** 
-per **Linux x64**, 
-ovvero il file **jdk-8u73-linux-x64.tar.gz**. 
-
-Questo file va scaricato e copiato nella cartella **environments/shared/resources** 
-prima di procedere con le attività successive. 
-
-Se si usa una versione di Java SDK diversa dalla versione 8u73, 
-è necessario anche modificare le prime righe dello script 
-**environments/shared/scripts/setup-java.sh**, 
-indicando il numero della versione che è stata scaricata. 
+Per usare delle versioni più recenti del software di sviluppo 
+(come *JDK* e *Gradle*) 
+è necessario modificare le prime righe dei relativi script di installazione 
+(per esempio, **environments/shared/scripts/setup-java.sh** per *JDK*), 
+indicando il numero della versione da utilizzare. 
 
 ## Utilizzo degli ambienti di esecuzione 
 
@@ -67,3 +57,6 @@ E' anche possibile:
 
 * [client-server](client-server/) 
   per l'esecuzione di applicazioni Java distribuite di tipo client-server 
+
+* [java-ee](java-ee/) 
+  per l'esecuzione di applicazioni Java EE con l'application server *GlassFish*  

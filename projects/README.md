@@ -83,6 +83,8 @@ ed è descritta nell'ambito dei singoli progetti.
 
 * [asw-830-rmi](asw-830-rmi/): oggetti distribuiti e invocazione remota 
 
+* [asw-840-jms](asw-840-jms/): messaging con *JMS* 
+
 ## Libreria 
 
 Questa sezione del repository contiene anche delle librerie usate 

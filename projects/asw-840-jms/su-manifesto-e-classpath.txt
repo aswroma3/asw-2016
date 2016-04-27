@@ -1,0 +1,11 @@
+=======================================
+Domanda: è necessario indicare correttamente nel classpath 
+del file MANIFEST.MF tutti i file jar necessari per l'esecuzione? 
+
+Risposta (da quanto ho capito sperimentalmente): 
+
+SI per gli application client 
+   (tranne i jar delle librerie Java EE, che sono gestiti da appclient)
+NO per i file jar per gli EJB rilasciati sul sever con asadmin deploy 
+   (al rilascio bisogna però indicare le librerie da cui dipende l'EJB) 
+

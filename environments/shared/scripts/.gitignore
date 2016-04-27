@@ -2,15 +2,17 @@
 
 # common.sh
 
-# setup-gradle.sh
 # setup-java.sh
+# setup-gradle.sh
+
+# setup-java-ee.sh
+# setup-server-hosts.sh
+# start-glassfish.sh 
+# setup-java-ee-appclient.sh
 
 setup-consul.sh
 setup-docker.sh
 setup-docker-compose.sh
-setup-java-ee.sh
-setup-java-ee-appclient.sh
-setup-server-hosts.sh
 setup-swarm-hosts.sh
 
 # file e cartelle da ignorare DEFINITIVAMENTE 

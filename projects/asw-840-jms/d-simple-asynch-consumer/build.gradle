@@ -1,0 +1,103 @@
+/* 
+ * Gradle build file per un'applicazione Java EE appclient multi-progetto. 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+
+/* progetti i cui jar che devono essere rilasciati lato app client */ 
+def appClientProjects = [':simple-asynch-consumer']
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        flatDir { 
+           dirs "../../../libraries"
+        }
+        mavenCentral()
+    }
+
+    configurations {
+        libs
+    }
+    
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
+
+project(':simple-asynch-consumer') {
+    dependencies {
+        compile 'asw:asw-util:latest'
+        libs 'asw:asw-util:latest'
+        compile 'javax.jms:javax.jms-api:2.0.1'
+    }
+
+    jar {
+        manifest {
+            attributes 'Main-Class': 'asw.jms.simpleasynchconsumer.Main'
+            attributes 'Class-Path': 'asw-util.jar' 
+        }
+    }
+
+}
+
+/* 
+ * DISTRIBUZIONE e BUILD 
+ */ 
+
+// copia nella cartella dist/client tutti i file di interesse  
+
+// copia nella cartella dist i file jar degli application client  
+task copyAppClientJarFiles(type: Copy, dependsOn: subprojects.build) {
+    setIncludeEmptyDirs(false)
+    subprojects.each { subproject -> 
+        from subproject.buildDir  
+        include 'libs/**'
+    }
+    into 'dist/client'
+}
+
+// copia nella cartella dist/client/libs i file jar delle librerie di interesse  
+task copyAppClientLibFiles(type: Copy) {
+    appClientProjects.collect {
+        project(it) { subproject -> 
+            from subproject.configurations.libs  
+            include '**'
+        }
+        into 'dist/client/libs'
+    }
+}
+
+// copia nella cartella dist/client tutti gli script  
+task copyAppClientScripts(type: Copy) {
+    from 'scripts/client' 
+    into 'dist/client'
+}
+
+// copia nella cartella dist/client tutte le altre risorse   
+task copyAppClientResources(type: Copy) {
+    from 'resources/client' 
+    into 'dist/client'
+}
+
+// copia tutti i file di interesse nella cartella dist 
+task dist(dependsOn: [copyAppClientJarFiles, copyAppClientLibFiles, copyAppClientScripts, copyAppClientResources]) {
+}
+
+task build(dependsOn: dist) {
+}
+
+/* 
+ * CLEAN 
+ * necessario perché il progetto principale non è un progetto Java 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "dist"
+    delete dirName
+}
+
+task clean(dependsOn: deleteDist) {
+}

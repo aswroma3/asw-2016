@@ -2,16 +2,17 @@
 
 # README.md 
 
+# org.eclipse.persistence.moxy-FIXED.jar
+
 consul.conf
-org.eclipse.persistence.moxy-FIXED.jar
 
 # file e cartelle da ignorare DEFINITIVAMENTE 
 
+jdk*
+gradle*
+java_ee_sdk*
 apache-tomcat-8.0.30.zip
 appclient-10.11.1.101.jar
 consul_0.6.0_linux_amd64.zip
-gradle-2.11-bin.zip
-java_ee_sdk-7u2.zip
-jdk-8u73-linux-x64.tar.gz
 VBoxGuestAdditions_5.0.8.iso
 

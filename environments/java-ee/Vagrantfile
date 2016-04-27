@@ -1,0 +1,114 @@
+# 
+# Vagrantfile per i progetti java-ee, con:
+# - un nodo server Java EE 
+# - un nodo client 
+# 
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    # Configurazioni comuni.
+
+    # Ubuntu precise 64 VirtualBox.
+    config.vm.box = "precise64"
+    # config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+
+    # Con trusty64 invece non funziona (c'è qualche problema con "sudo asadmin") 
+    # In alternativa: Ubuntu trusty 64 VirtualBox.
+    # config.vm.box = "ubuntu/trusty64"
+    # config.vm.box_url = "http://files.vagrantup.com/ubuntu/trusty64.box"
+
+    # folder per i progetti Asw (/home/vagrant/projects)
+    config.vm.synced_folder "../../projects/", "/home/vagrant/projects", :mount_options => ["dmode=777", "fmode=777"]
+
+    # folder per le risorse condivise per gli ambienti Asw (/home/vagrant/shared/resources e /home/vagrant/shared/scripts) 
+    config.vm.synced_folder "../shared/", "/home/vagrant/shared", :mount_options => ["dmode=777", "fmode=777"]
+
+    # folder per i progetti docker Asw (/home/vagrant/docker)
+    # config.vm.synced_folder "../../docker/", "/home/vagrant/docker", :mount_options => ["dmode=777", "fmode=777"]
+
+    #
+    # Configurazione del nodo "server", che prevede: 
+    # - Oracle Java SDK 8 
+    # - Gradle (NO) 
+    # - Oracle Java EE 7u2 (GlassFish 4.1.1) 
+    #
+    config.vm.define "server" do |node|
+        node.vm.hostname = "server"    
+
+        node.vm.provider "virtualbox" do |v| 
+            v.memory = 1024 
+        end 
+
+        node.vm.network "private_network", ip: "10.11.1.101", virtualbox__intnet: true
+        # riusa gli stessi numeri di porta di glassfish, 
+        # supponendo che non sia usato localmente 
+        node.vm.network "forwarded_port", guest: 8080, host: 8080
+        # node.vm.network "forwarded_port", guest: 8181, host: 8181
+        # node.vm.network "forwarded_port", guest: 4848, host: 4848
+
+        node.vm.network "forwarded_port", guest: 22, host: 2211, id: 'ssh', auto_correct: true
+        node.ssh.forward_agent = true
+        # node.ssh.forward_x11 = true
+ 
+        # provisioning con bash 
+        node.vm.provision :shell, :inline => 'apt-get update'
+        # node.vm.provision :shell, :inline => 'apt-get install unzip'
+	
+	# il server deve avere "10.11.1.101 server" nel file /etc/hosts, ma non "127.0.1.1 server"
+	# altrimenti un client remoto non riesce ad accedere al server java ee 
+        node.vm.provision :shell, path: "../shared/scripts/setup-server-hosts.sh"
+
+        node.vm.provision :shell, path: "../shared/scripts/setup-java.sh"
+        # node.vm.provision :shell, path: "../shared/scripts/setup-gradle.sh"
+        
+        node.vm.provision :shell, path: "../shared/scripts/setup-java-ee.sh"
+        
+        # avvia glassfish server 
+        node.vm.provision "shell", run: "always", path: "../shared/scripts/start-glassfish.sh"
+  
+        node.vm.provision :shell, 
+            inline: "echo  'configurazione nodo server per Java EE completata'"
+
+    end
+
+    #
+    # Configurazione del nodo "client", che prevede: 
+    # - Oracle Java SDK 8 
+    # - Gradle (NO) 
+    # - appclient per Java EE 7u2 (GlassFish 4.1.1) 
+    # - curl (come client di prova per servizi rest) 
+    #
+    config.vm.define "client" do |node|
+        node.vm.hostname = "client"    
+        node.vm.network "private_network", ip: "10.11.1.201", virtualbox__intnet: true
+
+        node.vm.provider "virtualbox" do |v| 
+            v.memory = 1024 
+        end 
+
+        node.vm.network "forwarded_port", guest: 22, host: 2221, id: 'ssh', auto_correct: true
+        node.ssh.forward_agent = true
+        # node.ssh.forward_x11 = true
+ 
+        # provisioning con bash 
+        node.vm.provision :shell, :inline => 'apt-get update'
+
+        # TEMPORANEO 
+        # node.vm.provision :shell, :inline => 'apt-get install unzip'
+
+        node.vm.provision :shell, path: "../shared/scripts/setup-java.sh"
+        # node.vm.provision :shell, path: "../shared/scripts/setup-gradle.sh"
+        
+        node.vm.provision :shell, path: "../shared/scripts/setup-java-ee-appclient.sh"
+
+        node.vm.provision :shell, inline: "echo  '*** installing curl ***'"
+        node.vm.provision :shell, :inline => 'apt-get install libcurl3'
+        node.vm.provision :shell, :inline => 'apt-get install curl'
+  
+        node.vm.provision :shell, 
+            inline: "echo  'configurazione nodo client per Java EE completata'"
+
+    end
+
+end

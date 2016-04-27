@@ -3,6 +3,7 @@
 # developer/ 
 # standalone/ 
 # client-server/
+# java-ee/
 
 apache-puppet/
 apache-puppetlabs-apache/
@@ -11,7 +12,6 @@ coreos/
 docker/
 docker-swarm-consul/
 docker-swarm-token/
-java-ee/
 
 
 # file e cartelle da ignorare DEFINITIVAMENTE 
