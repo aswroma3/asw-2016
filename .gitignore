@@ -10,6 +10,7 @@ projects/**/.project
 projects/**/.settings/
 
 projects/**/.gradle/ 
+projects/**/bin/ 
 projects/**/build/ 
 projects/**/dist/ 
 
