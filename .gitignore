@@ -6,6 +6,7 @@ private/
 .git/ 
 
 eclipse/
+projects/**/.classpath 
 projects/**/.project 
 projects/**/.settings/
 
@@ -20,3 +21,7 @@ environments/**/.vagrant/
 
 docker/
 
+# per attivare delle modifiche a .gitignore di faccia cosi' 
+# git rm -r --cached .
+# git add .
+# git commit -m ".gitignore is now working" 
