@@ -17,6 +17,8 @@ asw-870-rest/
 
 # file e cartelle da ignorare DEFINITIVAMENTE 
 
+bak/
+
 asw-870-rest-altri/
 asw-xxx-docker/
 esperimenti/

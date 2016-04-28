@@ -21,7 +21,7 @@ subprojects {
     // la versione fa riferimento a
     // - le ultime due cifre dell'anno 1.6.x
     // - il mese in cui è stata realizzata x.x.2 
-    version = '1.6.2' 
+    version = '1.6.4' 
     
 }
 

@@ -1,5 +1,8 @@
 package asw.jms.simpleasynchconsumer;
 
+import asw.jms.simplemessageprocessor.TextMessageProcessor;
+import asw.jms.simplemessageprocessor.SimpleMessageProcessor;
+
 import javax.jms.*;
 import javax.annotation.Resource;
 
@@ -84,9 +87,9 @@ public class Main {
          */
         logger.info("asynchconsumer.Main: " + consumerName + " ready to receive messages from the " + destinationName);
 
-        /* crea un consumer con il suo listener */
-        MessageListener listener = new SimpleMessageProcessor(consumerName, maxDelay);
-        SimpleAsynchConsumer asynchConsumer = new SimpleAsynchConsumer(consumerName, destination, connectionFactory, listener);
+        /* crea un message processor */
+        TextMessageProcessor messageProcessor = new SimpleMessageProcessor(consumerName);
+        SimpleAsynchConsumer asynchConsumer = new SimpleAsynchConsumer(consumerName, destination, connectionFactory, messageProcessor, maxDelay);
         logger.info("asynchconsumer.Main: Creato consumer: " + asynchConsumer.toString());
 
         /* la cancellazione del consumer avviene premendo il tasto INVIO dalla tastiera */

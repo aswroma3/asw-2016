@@ -1,6 +1,7 @@
 package asw.jms.simplefilter;
 
 import asw.jms.simpleasynchconsumer.SimpleAsynchConsumer;
+import asw.jms.simplemessagefilter.TextMessageFilter;
 import asw.jms.simplemessageprocessor.TextMessageProcessor;
 import asw.jms.simpleproducer.SimpleProducer;
 
@@ -17,6 +18,17 @@ import asw.util.logging.AswLogger;
  * Un SimpleFilter e' un endpoint che legge messaggi da una destinazione JMS
  * e, in corrispondenza, invia messaggi a un'altra destinazione JMS.
  *
+ * Il filtraggio dei messaggi viene effettuato da un TextMessageFilter. 
+ * 
+ * Questo filter e' anche un consumatore di messaggi testuali,
+ * poiche' implementa TextMessageProcessor.
+ *
+ * Introduce un ritardo per simulare il tempo di elaborazione
+ * di ciascun messaggio.
+ *
+ * I messaggi in ingresso possono essere inviati da un SimpleProducer.
+ * I messaggi in uscita possono essere consumati da un SimpleXConsumer.
+ *
  * @author Luca Cabibbo
  */
 public class SimpleFilter implements Cancellable, TextMessageProcessor {
@@ -27,9 +39,9 @@ public class SimpleFilter implements Cancellable, TextMessageProcessor {
 	/* nome di questo filtro */
     private String name;
     /* la destinazione da cui questo filtro legge messaggi */
-    private Destination sorgenteMessaggi;
+    private Destination messageSource;
     /* la destinazione a cui questo filtro invia messaggi */
-    private Destination destinazioneMessaggi;
+    private Destination messageDestination;
     /* connection factory di questo filtro */
     private ConnectionFactory connectionFactory;
 
@@ -37,11 +49,13 @@ public class SimpleFilter implements Cancellable, TextMessageProcessor {
     private int maxDelay;
 
     /* il consumatore di questo filtro */
-    private SimpleAsynchConsumer consumer = null;
+    private SimpleAsynchConsumer consumer;
     /* il produttore di questo filtro */
-    private SimpleProducer producer = null;
+    private SimpleProducer producer;
+    /* il filtro di messaggi per elaborare i messaggi */
+    TextMessageFilter messageFilter;
 
-    /* numero di messaggi consumati finora */
+    /* numero di messaggi ricevuti finora */
     private int messagesReceived;
     /* e' stato cancellato? */
     private boolean cancelled;
@@ -49,26 +63,29 @@ public class SimpleFilter implements Cancellable, TextMessageProcessor {
     /*
 	 * Crea un nuovo SimpleFilter di nome name
 	 * che legge messaggi dalla destinazione sorgenteMessaggi
-	 * e invia messaggi alla destinazione destinazioneMessaggi.
+	 * e invia messaggi alla destinazione destinazioneMessaggi, 
+	 * che inviera' i messaggi filtrati dal message filter mf.
 	 */
 	public SimpleFilter(String name, Destination sorgenteMessaggi, Destination destinazioneMessaggi,
-			ConnectionFactory connectionFactory, int maxDelay) {
+			ConnectionFactory connectionFactory, TextMessageFilter mf, int maxDelay) {
 		this.name = name;
-    	this.sorgenteMessaggi = sorgenteMessaggi;
-    	this.destinazioneMessaggi = destinazioneMessaggi;
+    	this.messageSource = sorgenteMessaggi;
+    	this.messageDestination = destinazioneMessaggi;
     	this.connectionFactory = connectionFactory;
+    	this.messageFilter = mf;
+
     	this.maxDelay = maxDelay;
 
     	/* crea un consumatore su sorgenteMessaggi: 
     	 * girera' messaggi a questo oggetto (this) */
     	this.consumer =
     			new SimpleAsynchConsumer("Consumatore messaggi per " + this.name,
-    					this.sorgenteMessaggi, this.connectionFactory, this, 10);
+    					this.messageSource, this.connectionFactory, this, 10);
         logger.info("Creato consumatore: " + consumer.toString());
 
         /* crea un produttore su destinazioneMessaggi */
     	this.producer = new SimpleProducer("Produttore messaggi per " + this.name,
-    			this.destinazioneMessaggi, this.connectionFactory, 10);
+    			this.messageDestination, this.connectionFactory, 10);
         logger.info("Creato produttore: " + producer.toString());
 
         this.messagesReceived = 0;
@@ -81,7 +98,6 @@ public class SimpleFilter implements Cancellable, TextMessageProcessor {
     public void connect() {
         /* avvia il produttore */
         producer.connect();
-
         /* avvia il consumatore */
         consumer.connect();
     }
@@ -92,7 +108,6 @@ public class SimpleFilter implements Cancellable, TextMessageProcessor {
     public void disconnect() {
         /* disconnette il consumatore */
         consumer.disconnect();
-
 		/* disconnette il produttore */
 		producer.disconnect();
 
@@ -102,22 +117,23 @@ public class SimpleFilter implements Cancellable, TextMessageProcessor {
     /**
      * Inizia la sessione di ricezione di messaggi dalla destinazione.
      */
-    public void receiveMessages() {
+    public void filterMessages() {
     	this.consumer.receiveMessages();
     }
 
     /**
-     * Gestione del messaggio ricevuto message.
+     * Riceve e filtra un messaggio
+     * (implementa TextMessageProcessor).
      */
-    public void processMessage(String message) {
-		logger.info("SimpleFilter: Ricevuto messaggio: " + message);
+    public void processMessage(String inMessage) {
+		logger.info("SimpleFilter: Ricevuto messaggio: " + inMessage);
 		this.messagesReceived++;
+		/* invia un messaggio alla destinazione */
+		String outMessage = inMessage.toUpperCase() + " (filtered by " + name + ")";
         /* introduce un ritardo */
     	Sleeper.randomSleep(maxDelay/2,maxDelay);
-		/* invia un messaggio alla destinazione */
-		String messaggioDaInviare = message.toUpperCase() + " (filtered by " + name + ")";
-		logger.info("SimpleFilter: Invio messaggio: " + messaggioDaInviare);
-		producer.sendMessage(messaggioDaInviare);
+		logger.info("SimpleFilter: Invio messaggio: " + outMessage);
+		producer.sendMessage(outMessage);
     }
 
     /**
@@ -143,8 +159,8 @@ public class SimpleFilter implements Cancellable, TextMessageProcessor {
         return "SimpleFilter[" +
                 "name=" + name +
                 ", maxDelay=" + maxDelay +
-//                ", reading from=" + sorgenteMessaggi.toString() +
-//                ", writing to=" + destinazioneMessaggi.toString() +
+//                ", reading from=" + messageSource.toString() +
+//                ", writing to=" + messageDestination.toString() +
                 "]";
     }
 

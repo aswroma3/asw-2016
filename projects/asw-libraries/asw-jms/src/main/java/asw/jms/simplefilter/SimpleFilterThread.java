@@ -40,7 +40,7 @@ public class SimpleFilterThread extends Thread {
 
     	simpleFilter.connect();
 
-    	simpleFilter.receiveMessages();
+    	simpleFilter.filterMessages();
 
     	simpleFilter.disconnect();
     	logger.info("FilterThread: " + name + ": Done");

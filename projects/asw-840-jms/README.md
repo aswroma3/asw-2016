@@ -26,11 +26,17 @@ di **messaging** basate su **JMS** e **Java EE**:
   un'applicazione per leggere messaggi *JMS* da una coda 
   (i messaggi non vengono consumati, ma rimangono nella coda) 
   
-* **f-multiple-producers-consumers** 
+* **f-simple-filter** 
+  un'applicazione che riceve messaggi *JMS* in modo asincrono 
+  da un canale per messaggi, li filtra (li trasforma) e li invia 
+  a un altro canale per messaggi 
+  (può essere arrestata premendo il tasto *ENTER*/*INVIO* della tastiera) 
+
+* **g-multiple-producers-consumers** 
   un'applicazione che istanzia più produttori e più consumatori di messaggi *JMS* 
   e genera un log dello scambio di messaggi 
   
-* **g-mpc-lookup-jndi** 
+* **h-mpc-lookup-jndi** 
   un'altra applicazione che istanzia più produttori e più consumatori di messaggi *JMS*, 
   variante di **f-multiple-producers-consumers**, 
   che però accede alle risorse JMS non mediante iniezione delle risorse (come le altre applicazioni) 
@@ -91,4 +97,37 @@ Per eseguire un'applicazione (dopo la *Preparazione*) si proceda in questo modo:
    a. posizionarsi nella cartella principale dell'applicazione 
 
    b. eseguire lo script `dist/client/run-appclient.sh` 
+      (in questo caso l'applicazione invia messaggi o riceve messaggi alla/dalla coda `queue`)
 
+   c. in alternativa, con il comando `dist/client/run-appclient.sh topic` 
+      l'applicazione invia messaggi o riceve messaggi al/dal topic `topic`)
+      
+Alcune considerazioni aggiuntive: 
+
+* per realizzare un sistema con un produttore di messaggi e un consumatore di messaggi per la coda `queue`
+  
+  * in un client, eseguire `b-simple-synch-consumer/dist/client/run-appclient.sh` 
+    oppure `c-cancellable-synch-consumer/dist/client/run-appclient.sh`
+    oppure `d-simple-asynch-consumer/dist/client/run-appclient.sh`
+
+  * in un altro client, eseguire `a-simple-producer/dist/client/run-appclient.sh`
+  
+* per realizzare un sistema con un produttore di messaggi e un consumatore di messaggi per il topic `topic`
+  
+  * in un client, eseguire `b-simple-synch-consumer/dist/client/run-appclient.sh topic` 
+    oppure `c-cancellable-synch-consumer/dist/client/run-appclient.sh topic`
+    oppure `d-simple-asynch-consumer/dist/client/run-appclient.sh topic`
+    
+  * in un altro client, eseguire `a-simple-producer/dist/client/run-appclient.sh topic`
+  
+* per realizzare un sistema con un produttore di messaggi per `queue`, 
+  un filtro di messaggi da `queue` a `topic` 
+  e un consumatore di messaggi da `topic`
+
+  * in un client, eseguire `b-simple-synch-consumer/dist/client/run-appclient.sh topic` 
+    oppure `c-cancellable-synch-consumer/dist/client/run-appclient.sh topic`
+    oppure `d-simple-asynch-consumer/dist/client/run-appclient.sh topic`
+
+  * in un altro client, eseguire `f-simple-filter/dist/client/run-appclient.sh queue topic`
+
+  * in un altro client ancora, eseguire `a-simple-producer/dist/client/run-appclient.sh queue`
