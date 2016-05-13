@@ -1,0 +1,4 @@
+Rilascia il servizio rest HelloRest 
+all'indirizzo http://10.11.1.101:8080/asw/hellorest/hello
+- http://10.11.1.101:8080/asw/hellorest/hello/helloworld 
+- http://10.11.1.101:8080/asw/hellorest/hello/sayhello/Luca 

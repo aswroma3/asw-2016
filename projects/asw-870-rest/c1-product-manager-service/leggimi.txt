@@ -1,0 +1,4 @@
+Rilascia il servizio rest ProductManagerRest 
+all'indirizzo http://10.11.1.101:8080/asw/productmanager
+- http://10.11.1.101:8080/asw/productmanager/product/{id}
+- http://10.11.1.101:8080/asw/productmanager/products

@@ -5,6 +5,9 @@
  * - gradle clean cancella i jar file e la distribuzione 
  */ 
 
+/* definisce il nome dell'application client */ 
+ext.appName = 'message-browser'
+
 /* progetti i cui jar che devono essere rilasciati lato app client */ 
 def appClientProjects = [':message-browser']
 
@@ -74,6 +77,12 @@ task copyAppClientLibFiles(type: Copy) {
 task copyAppClientScripts(type: Copy) {
     from 'scripts/client' 
     into 'dist/client'
+    rename { String fileName ->
+        fileName.replace('-TEMPLATE', '')
+    }
+    filter { String line -> 
+        line.replace('@@@APPNAME@@@', appName)
+    }
 }
 
 // copia nella cartella dist/client tutte le altre risorse   

@@ -1,0 +1,127 @@
+/* 
+ * Gradle build file per un'applicazione basata su WS REST, 
+ * con la definizione di client Java per un servizio REST. 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+
+/* definisce il nome del web service rest */ 
+ext.restName = 'product-manager'
+
+/* definisce il nome del client e della sua main class */ 
+ext.appName = restName + '-client'
+ext.mainClass = 'asw.rest.productmanager.client.Main'
+
+/* progetti i cui jar che devono essere rilasciati lato server o client */ 
+def clientSideProjects = [':rest-client']
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        flatDir { 
+           dirs "../../../libraries"
+        }
+        mavenCentral()
+    }
+
+    configurations {
+        libs
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+
+}
+
+
+project(':rest-client') {
+    dependencies {
+        compile 'asw:asw-util:latest'
+        compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+        compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.7.4'
+        compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-xml-provider:2.7.4'
+
+        libs 'asw:asw-util:latest'
+        libs 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+        libs 'org.glassfish.jersey.core:jersey-common:2.22.2'
+        libs 'org.jboss.resteasy:resteasy-client:3.0.16.Final'
+        libs 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.7.4'
+        libs 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-xml-provider:2.7.4'
+    }
+    
+    jar {
+        baseName = appName  
+        manifest {
+            attributes 'Main-Class': mainClass
+            // classpath definito nello script run-rest-client.sh 
+        }
+    }
+         
+}
+
+
+// copia nella cartella dist/client tutti i file di interesse  
+
+// copia nella cartella dist i file jar dei client  
+task copyClientJarFiles(type: Copy, dependsOn: subprojects.build) {
+    setIncludeEmptyDirs(false)
+    subprojects.each { subproject -> 
+        from subproject.buildDir  
+        include 'libs/**'
+    }
+    into 'dist/client'
+}
+
+// copia nella cartella dist/client/libs i file jar delle librerie di interesse  
+task copyClientLibFiles(type: Copy) {
+    clientSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.configurations.libs  
+            include '**'
+        }
+        into 'dist/client/libs'
+    }
+}
+
+// copia nella cartella dist/client tutti gli script  
+task copyClientScripts(type: Copy) {
+    from 'scripts/client' 
+    into 'dist/client'
+    rename { String fileName ->
+        fileName.replace('-TEMPLATE', '')
+    }
+    filter { String line -> 
+        line.replace('@@@APPNAME@@@', appName)
+            .replace('@@@MAINCLASS@@@', mainClass)
+    }
+}
+
+// copia nella cartella dist/client tutte le altre risorse   
+task copyClientResources(type: Copy) {
+    from 'resources/client' 
+    into 'dist/client'
+}
+
+// copia tutti i file di interesse nella cartella dist 
+task dist(dependsOn: [copyClientJarFiles, copyClientLibFiles, copyClientScripts, copyClientResources]) {
+}
+
+task build(dependsOn: dist) {
+}
+
+/* 
+ * CLEAN 
+ * necessario perché il progetto principale non è un progetto Java 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "dist"
+    delete dirName
+}
+
+task clean(dependsOn: deleteDist) {
+}
+

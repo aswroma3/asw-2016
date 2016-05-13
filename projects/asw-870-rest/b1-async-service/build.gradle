@@ -1,0 +1,116 @@
+/* 
+ * Gradle build file per un'applicazione basata su WS REST, 
+ * con la definizione di un web service (ma non del suo client). 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+ 
+/* definisce il nome del web service rest */ 
+ext.restName = 'async'
+
+/* progetti i cui jar che devono essere rilasciati lato server o client */ 
+def serverSideProjects = [':rest-service']
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        flatDir { 
+           dirs "../../../libraries"
+        }
+        mavenCentral()
+    }
+
+    configurations {
+        libs
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
+
+project(':rest-service') {
+
+    apply plugin: 'war' 
+
+    dependencies {
+        compile 'asw:asw-util:latest'
+        compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+        // per http servlet request 
+        // compile 'javax.servlet:servlet-api:2.5'
+	// se fosse dichiarato anche come un ejb 
+        // compile 'javax.ejb:javax.ejb-api:3.2'
+
+        libs 'asw:asw-util:latest'
+    }
+    war {
+        baseName = restName  
+    }
+}
+
+/* 
+ * DISTRIBUZIONE - SERVER 
+ */ 
+
+// copia nella cartella dist/server tutti i file di interesse  
+
+task copyServerJarFiles(type: Copy, dependsOn: subprojects.build) {
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.buildDir  
+            include 'libs/**'
+        }
+        into 'dist/server'
+    }
+}
+
+// copia nella cartella dist/server/libs i file jar delle librerie di interesse  
+task copyServerLibFiles(type: Copy) {
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.configurations.libs  
+            include '**'
+        }
+        into 'dist/server/libs'
+    }
+}
+
+task copyServerScripts(type: Copy) {
+    from 'scripts/server' 
+    into 'dist/server'
+}
+
+task copyServerResources(type: Copy) {
+    from 'resources/server' 
+    into 'dist/server'
+}
+
+task serverDist(dependsOn: [copyServerJarFiles, copyServerLibFiles, copyServerScripts, copyServerResources]) {
+}
+
+
+/* 
+ * DISTRIBUZIONE e BUILD 
+ */ 
+
+task dist(dependsOn: [serverDist]) {
+}
+
+task build(dependsOn: dist) {
+}
+
+
+/*
+ * CLEAN 
+ * necessario perché il progetto principale non è un progetto Java 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "dist"
+    delete dirName
+}
+
+task clean(dependsOn: deleteDist) {
+}

@@ -12,14 +12,16 @@
 
 asw-850-ejb/
 asw-860-ws/
-asw-870-rest/
+
+# asw-870-rest/
 
 
 # file e cartelle da ignorare DEFINITIVAMENTE 
 
 bak/
 
-asw-870-rest-altri/
+asw-999-rest-altri/
+asw-999-rest-spring/
 asw-xxx-docker/
 esperimenti/
 zzz-altri/ 

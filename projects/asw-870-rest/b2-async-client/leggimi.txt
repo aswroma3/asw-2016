@@ -1,0 +1,3 @@
+Rilascia il servizio rest AsyncRest 
+all'indirizzo http://10.11.1.101:8080/asw/asyncrest/async
+- http://10.11.1.101:8080/asw/asyncrest/async/{string}

@@ -15,13 +15,17 @@ projects/**/bin/
 projects/**/build/ 
 projects/**/dist/ 
 
+projects/**/derby.log
+
 environments/**/.vagrant/ 
 
 # file e cartelle da ignorare TEMPORANEAMENTE 
 
 docker/
+microservice/
 
-# per attivare delle modifiche a .gitignore di faccia cosi' 
+
+# per attivare delle modifiche a .gitignore di fa cosi' 
 # git rm -r --cached .
 # git add .
 # git commit -m ".gitignore is now working" 

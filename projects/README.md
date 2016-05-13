@@ -85,6 +85,8 @@ ed è descritta nell'ambito dei singoli progetti.
 
 * [asw-840-jms](asw-840-jms/): messaging con *JMS* 
 
+* [asw-870-rest](asw-870-rest/): servizi *REST* 
+
 ## Libreria 
 
 Questa sezione del repository contiene anche delle librerie usate 
