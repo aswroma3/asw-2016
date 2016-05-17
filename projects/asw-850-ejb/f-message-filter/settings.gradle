@@ -1,0 +1,2 @@
+
+include "message-producer", "message-filter-bean", "message-consumer"

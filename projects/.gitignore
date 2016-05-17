@@ -9,8 +9,8 @@
 # asw-820-socket/
 # asw-830-rmi/
 # asw-840-jms/
+# asw-850-ejb/
 
-asw-850-ejb/
 asw-860-ws/
 
 # asw-870-rest/
@@ -20,8 +20,8 @@ asw-860-ws/
 
 bak/
 
-asw-999-rest-altri/
-asw-999-rest-spring/
+asw-9*/
+
 asw-xxx-docker/
 esperimenti/
 zzz-altri/ 

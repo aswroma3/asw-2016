@@ -1,0 +1,198 @@
+/* 
+ * Gradle build file per un'applicazione EJB multi-progetto, 
+ * con la definizione di componente EJB di tipo message driven 
+ * e di due application client per produrre e consumare messaggi. 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+ 
+/* definisce il nome del bean */ 
+ext.beanName = 'message-filter-ejb'
+
+/* progetti i cui jar che devono essere rilasciati lato server o client */ 
+def serverSideProjects = [':message-filter-bean']
+def clientSideProjects = [':message-producer', ':message-consumer']
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        flatDir { 
+           dirs "../../../libraries"
+        }
+        mavenCentral()
+    }
+
+    configurations {
+        libs
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
+
+
+project(':message-producer') {
+    dependencies {
+        compile 'asw:asw-util:latest'
+        compile 'asw:asw-jms:latest'
+        libs 'asw:asw-util:latest'
+        libs 'asw:asw-jms:latest'
+        compile 'javax.jms:javax.jms-api:2.0.1'
+    }
+    jar {
+        manifest {
+            attributes 'Main-Class': 'asw.ejb.messagefilter.producer.Main'
+            attributes 'Class-Path': 'asw-util.jar asw-jms.jar' 
+        }
+    }
+}
+
+project(':message-consumer') {
+    dependencies {
+        compile 'asw:asw-util:latest'
+        compile 'asw:asw-jms:latest'
+        libs 'asw:asw-util:latest'
+        libs 'asw:asw-jms:latest'
+        compile 'javax.jms:javax.jms-api:2.0.1'
+    }
+    jar {
+        manifest {
+            attributes 'Main-Class': 'asw.ejb.messagefilter.consumer.Main'
+            attributes 'Class-Path': 'asw-util.jar asw-jms.jar' 
+        }
+    }
+}
+
+project(':message-filter-bean') {
+    dependencies {
+        compile 'asw:asw-util:latest'
+        compile 'asw:asw-jms:latest'
+        libs 'asw:asw-util:latest'
+        libs 'asw:asw-jms:latest'
+        compile 'javax.jms:javax.jms-api:2.0.1'
+        compile 'javax.ejb:javax.ejb-api:3.2'        
+    }
+
+    jar {
+        baseName = beanName  
+        manifest {
+            attributes 'Class-Path': 'asw-util.jar asw-jms.jar' 
+        }    
+    }
+}
+
+
+/* 
+ * DISTRIBUZIONE - SERVER 
+ */ 
+
+// copia nella cartella dist/server tutti i file di interesse  
+
+task copyServerJarFiles(type: Copy, dependsOn: subprojects.build) {
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.buildDir  
+            include 'libs/**'
+            rename { String fileName ->
+                fileName.replace("-${subproject.version}", "")
+            }
+        }
+        into 'dist/server'
+    }
+}
+
+// copia nella cartella dist/server/libs i file jar delle librerie di interesse  
+task copyServerLibFiles(type: Copy) {
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.configurations.libs  
+            include '**'
+        }
+        into 'dist/server/libs'
+    }
+}
+
+task copyServerScripts(type: Copy) {
+    from 'scripts/server' 
+    into 'dist/server'
+}
+
+task copyServerResources(type: Copy) {
+    from 'resources/server' 
+    into 'dist/server'
+}
+
+task serverDist(dependsOn: [copyServerJarFiles, copyServerLibFiles, copyServerScripts, copyServerResources]) {
+}
+
+
+/* 
+ * DISTRIBUZIONE - CLIENT 
+ */ 
+
+// copia nella cartella dist/client tutti i file di interesse  
+
+task copyAppClientJarFiles(type: Copy, dependsOn: subprojects.build) {
+    clientSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.buildDir  
+            include 'libs/**'
+        }
+        into 'dist/client'
+    }
+}
+
+// copia nella cartella dist/client/libs i file jar delle librerie di interesse  
+task copyAppClientLibFiles(type: Copy) {
+    clientSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.configurations.libs  
+            include '**'
+        }
+        into 'dist/client/libs'
+    }
+}
+
+// copia nella cartella dist/client tutti gli script  
+task copyAppClientScripts(type: Copy) {
+    from 'scripts/client' 
+    into 'dist/client'
+}
+
+// copia nella cartella dist/client tutte le altre risorse   
+task copyAppClientResources(type: Copy) {
+    from 'resources/client' 
+    into 'dist/client'
+}
+
+// copia tutti i file di interesse nella cartella dist 
+task appClientDist(dependsOn: [copyAppClientJarFiles, copyAppClientLibFiles, copyAppClientScripts, copyAppClientResources]) {
+}
+
+
+/* 
+ * DISTRIBUZIONE e BUILD 
+ */ 
+
+task dist(dependsOn: [serverDist, appClientDist]) {
+}
+
+task build(dependsOn: dist) {
+}
+
+
+/*
+ * CLEAN 
+ * necessario perché il progetto principale non è un progetto Java 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "dist"
+    delete dirName
+}
+
+task clean(dependsOn: deleteDist) {
+}

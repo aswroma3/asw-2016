@@ -1,0 +1,195 @@
+/* 
+ * Gradle build file per un'applicazione EJB multi-progetto, 
+ * con la definizione di un servizio (interfaccia remota), 
+ * un'implementazione e anche un client (application client). 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+ 
+/* definisce il nome del bean */ 
+ext.beanName = 'asynchronous-ejb'
+
+/* definisce il nome dell'application client e la sua main class */ 
+ext.appName = beanName + '-client'
+ext.appMainClass = 'asw.ejb.asynchronous.client.Main'
+
+/* progetti i cui jar che devono essere rilasciati lato server o client */ 
+def serverSideProjects = [':bean-interface', ':bean-impl']
+def clientSideProjects = [':bean-interface', ':app-client']
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        flatDir { 
+           dirs "../../../libraries"
+        }
+        mavenCentral()
+    }
+
+    configurations {
+        libs
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
+
+project(':bean-interface') {
+    dependencies {
+        compile 'javax.ejb:javax.ejb-api:3.2'
+    }
+    jar {
+        baseName = beanName + '-interface' 
+    }
+}
+
+project(':bean-impl') {
+    dependencies {
+        compile 'asw:asw-util:latest'
+        libs 'asw:asw-util:latest'
+        compile 'javax.ejb:javax.ejb-api:3.2'
+        compile 'javax.interceptor:javax.interceptor-api:1.2'
+        compile project(':bean-interface')
+    }
+    jar {
+        baseName = beanName + '-impl' 
+    }
+}
+
+project(':app-client') {
+    dependencies {
+        compile 'asw:asw-util:latest'
+        libs 'asw:asw-util:latest'
+        compile project(':bean-interface')
+        compile 'javax.ejb:javax.ejb-api:3.2'
+    }
+    jar {
+        baseName = appName  
+        manifest {
+            attributes 'Main-Class': appMainClass
+            attributes 'Class-Path': 'asw-util.jar ' + beanName + '-interface.jar' 
+        }
+    }
+}
+
+
+/* 
+ * DISTRIBUZIONE - SERVER 
+ */ 
+
+// copia nella cartella dist/server tutti i file di interesse  
+
+task copyServerJarFiles(type: Copy, dependsOn: subprojects.build) {
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.buildDir  
+            include 'libs/**'
+            rename { String fileName ->
+                fileName.replace("-${subproject.version}", "")
+            }
+        }
+        into 'dist/server'
+    }
+}
+
+// copia nella cartella dist/server/libs i file jar delle librerie di interesse  
+task copyServerLibFiles(type: Copy) {
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.configurations.libs  
+            include '**'
+        }
+        into 'dist/server/libs'
+    }
+}
+
+task copyServerScripts(type: Copy) {
+    from 'scripts/server' 
+    into 'dist/server'
+}
+
+task copyServerResources(type: Copy) {
+    from 'resources/server' 
+    into 'dist/server'
+}
+
+task serverDist(dependsOn: [copyServerJarFiles, copyServerLibFiles, copyServerScripts, copyServerResources]) {
+}
+
+
+/* 
+ * DISTRIBUZIONE - CLIENT 
+ */ 
+
+// copia nella cartella dist/client tutti i file di interesse  
+
+task copyAppClientJarFiles(type: Copy, dependsOn: subprojects.build) {
+    clientSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.buildDir  
+            include 'libs/**'
+        }
+        into 'dist/client'
+    }
+}
+
+// copia nella cartella dist/client/libs i file jar delle librerie di interesse  
+task copyAppClientLibFiles(type: Copy) {
+    clientSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.configurations.libs  
+            include '**'
+        }
+        into 'dist/client/libs'
+    }
+}
+
+// copia nella cartella dist/client tutti gli script  
+task copyAppClientScripts(type: Copy) {
+    from 'scripts/client' 
+    into 'dist/client'
+    rename { String fileName ->
+        fileName.replace('-TEMPLATE', '')
+    }
+    filter { String line -> 
+        line.replace('@@@APPNAME@@@', appName)
+    }
+}
+
+// copia nella cartella dist/client tutte le altre risorse   
+task copyAppClientResources(type: Copy) {
+    from 'resources/client' 
+    into 'dist/client'
+}
+
+// copia tutti i file di interesse nella cartella dist 
+task appClientDist(dependsOn: [copyAppClientJarFiles, copyAppClientLibFiles, copyAppClientScripts, copyAppClientResources]) {
+}
+
+
+/* 
+ * DISTRIBUZIONE e BUILD 
+ */ 
+
+task dist(dependsOn: [serverDist, appClientDist]) {
+}
+
+task build(dependsOn: dist) {
+}
+
+
+/*
+ * CLEAN 
+ * necessario perché il progetto principale non è un progetto Java 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "dist"
+    delete dirName
+}
+
+task clean(dependsOn: deleteDist) {
+}
