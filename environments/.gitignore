@@ -16,5 +16,7 @@ docker-swarm-token/
 
 # file e cartelle da ignorare DEFINITIVAMENTE 
 
+**/.vagrant/
+
 virtualboxadditions/
 

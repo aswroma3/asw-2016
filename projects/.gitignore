@@ -18,6 +18,17 @@ asw-860-ws/
 
 # file e cartelle da ignorare DEFINITIVAMENTE 
 
+**/.gradle/ 
+**/bin/ 
+**/build/ 
+**/dist/ 
+
+**/.classpath 
+**/.project 
+**/.settings/
+
+**/derby.log
+
 bak/
 
 asw-9*/

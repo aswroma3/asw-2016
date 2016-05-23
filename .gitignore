@@ -6,18 +6,7 @@ private/
 .git/ 
 
 eclipse/
-projects/**/.classpath 
-projects/**/.project 
-projects/**/.settings/
 
-projects/**/.gradle/ 
-projects/**/bin/ 
-projects/**/build/ 
-projects/**/dist/ 
-
-projects/**/derby.log
-
-environments/**/.vagrant/ 
 
 # file e cartelle da ignorare TEMPORANEAMENTE 
 

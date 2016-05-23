@@ -18,7 +18,7 @@ import asw.util.sleep.Sleeper;
 public class Main {
 
 		@EJB(lookup = "ejb/asw/AsynchronousHello")
-		public static AsynchronousHello asynchHello;
+		public static AsynchronousHello asyncHello;
 
 		/* logger */
 		private static Logger logger = AswLogger.getInstance().getLogger("asw.ejb.asynchronous.client");
@@ -35,26 +35,26 @@ public class Main {
 	    	logger.info("Client: Ora uso il servizio AsynchronousHello");
 
 	    	/* dovrebbe restituire "Hello, LUCA!" */
-	    	callAsynchHello("Luca");
+	    	callAsyncHello("Luca");
 
 	    	/* l'operazione dovrebbe venire cancellata */
-	    	callAsynchHello("Benedetta");
+	    	callAsyncHello("Benedetta");
 
 	    	/* dovrebbe sollevare un'eccezione di business */
-	    	callAsynchHello(null);
+	    	callAsyncHello(null);
 
 	    	logger.info("Client: Ho finito di usare il servizio AsynchronousHello");
 
 		}
 
 	    /* chiama l'operazione asincrona */
-	    private void callAsynchHello(String param) {
+	    private void callAsyncHello(String param) {
 	    	/* usa il servizio AsynchronousHello */
 			logger.info("Client: calling AsynchronousHello.hello(" + param + ")");
 			Future<String> futureResult;
 			long startingTime = System.currentTimeMillis();
 			try {
-				futureResult = asynchHello.hello(param);
+				futureResult = asyncHello.hello(param);
 				/* aspetta, ma al massimo un paio di secondi, facendo altre cose */
 				for (int i=0; i<10; i++) {
 					long currentTime = System.currentTimeMillis();
