@@ -10,7 +10,8 @@ eclipse/
 
 # file e cartelle da ignorare TEMPORANEAMENTE 
 
-docker/
+# docker/
+
 microservice/
 
 

@@ -1,0 +1,17 @@
+# file e cartelle da ignorare TEMPORANEAMENTE 
+
+apache_http_server/
+data_volume/ 
+hello_rest_wildfly/
+hello_rmi/ 
+hello_world/
+java_ciao_mondo/ 
+oracle_java/
+shared/ 
+simple_java_app/
+simple_tcp_server/
+simple_udp_server/
+www/
+
+# file e cartelle da ignorare DEFINITIVAMENTE 
+
