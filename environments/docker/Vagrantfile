@@ -19,8 +19,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # folder per le risorse condivise per gli ambienti Asw (/home/vagrant/shared/resources e /home/vagrant/shared/scripts) 
     config.vm.synced_folder "../shared/", "/home/vagrant/shared", :mount_options => ["dmode=777", "fmode=777"]
 
-    # eventuale folder per i progetti docker Asw (per es., /home/vagrant/docker)
-    # config.vm.synced_folder "../../docker/", "/home/vagrant/docker", :mount_options => ["dmode=777", "fmode=777"]
+    # folder per i progetti docker Asw (per es., /home/vagrant/docker)
+    config.vm.synced_folder "../../docker/", "/home/vagrant/docker", :mount_options => ["dmode=777", "fmode=777"]
 
     #
     # Configurazione del nodo "docker", che prevede: 
