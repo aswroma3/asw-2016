@@ -10,9 +10,10 @@
 # start-glassfish.sh 
 # setup-java-ee-appclient.sh
 
+# setup-docker.sh
+# setup-docker-compose.sh
+
 setup-consul.sh
-setup-docker.sh
-setup-docker-compose.sh
 setup-swarm-hosts.sh
 
 # file e cartelle da ignorare DEFINITIVAMENTE 

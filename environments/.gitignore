@@ -4,12 +4,12 @@
 # standalone/ 
 # client-server/
 # java-ee/
+# docker/
 
 apache-puppet/
 apache-puppetlabs-apache/
 apache-shell/
 coreos/
-docker/
 docker-swarm-consul/
 docker-swarm-token/
 

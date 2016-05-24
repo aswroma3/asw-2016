@@ -60,3 +60,6 @@ E' anche possibile:
 
 * [java-ee](java-ee/) 
   per l'esecuzione di applicazioni Java EE con l'application server *GlassFish*  
+  
+* [docker](docker/) 
+  per la gestione e l'esecuzione di contenitori *Docker*  

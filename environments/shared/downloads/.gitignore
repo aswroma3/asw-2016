@@ -1,5 +1,6 @@
 # da questa cartella va ignorato tutto (ma la cartella ci vuole)
 
 *.jar 
-*.zip 
+*.sh
 *.tar.gz 
+*.zip 

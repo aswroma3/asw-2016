@@ -14,7 +14,4 @@ ha il seguente software
 
 * Oracle Java SDK 
   
-## Preparazione 
-
-Questo ambiente di esecuzione richiede la preparazione per Oracle Java SDK per Linux 
-descritta nella sezione [environments/](../). 
+ 
