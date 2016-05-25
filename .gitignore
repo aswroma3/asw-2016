@@ -1,18 +1,16 @@
 # file e cartelle da ignorare DEFINITIVAMENTE 
 
 # la cartella con la mia documentazione su questo repository
-private/
+/private/
 
 .git/ 
 
-eclipse/
-
+/eclipse/
 
 # file e cartelle da ignorare TEMPORANEAMENTE 
 
-# docker/
-
-microservice/
+/docker/ 
+/microservice/
 
 
 # per attivare delle modifiche a .gitignore di fa cosi' 

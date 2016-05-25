@@ -1,22 +1,22 @@
 # file e cartelle da ignorare TEMPORANEAMENTE 
 
-# developer/ 
-# standalone/ 
-# client-server/
-# java-ee/
-# docker/
+# /developer/ 
+# /standalone/ 
+# /client-server/
+# /java-ee/
+# /docker/
 
-apache-puppet/
-apache-puppetlabs-apache/
-apache-shell/
-coreos/
-docker-swarm-consul/
-docker-swarm-token/
+/apache-puppet/
+/apache-puppetlabs-apache/
+/apache-shell/
+/coreos/
+/docker-swarm-consul/
+/docker-swarm-token/
 
 
 # file e cartelle da ignorare DEFINITIVAMENTE 
 
 **/.vagrant/
 
-virtualboxadditions/
+/virtualboxadditions/
 
