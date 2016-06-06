@@ -1,0 +1,119 @@
+/* 
+ * Gradle build file per un'applicazione basata su WS SOAP, 
+ * con la definizione di un web service (ma non del suo client). 
+ * 
+ * - gradle build compila, crea i jar e prepara la distribuzione 
+ * - gradle clean cancella i jar file e la distribuzione 
+ */ 
+ 
+/* definisce il nome e la locazione del web service */ 
+ext.wsRoot = 'asw/ws'
+ext.wsName = 'calculator-ws'
+ext.wsService = 'CalculatorService'
+
+/* progetti i cui jar che devono essere rilasciati lato server o client */ 
+def serverSideProjects = [':web-service']
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        flatDir { 
+           dirs "../../../libraries"
+        }
+        mavenCentral()
+    }
+
+    configurations {
+        libs
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
+
+project(':web-service') {
+
+    apply plugin: 'war' 
+
+    dependencies {
+        // nessuna dipendenza di compilazione: javax.jws fa parte di Java SE 8 
+        // compile 'javax.jws:jsr181-api:1.0-MR1'
+    }
+    war {
+        baseName = wsName  
+    }
+}
+
+/* 
+ * DISTRIBUZIONE - SERVER 
+ */ 
+
+// copia nella cartella dist/server tutti i file di interesse  
+
+task copyServerJarFiles(type: Copy, dependsOn: subprojects.build) {
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.buildDir  
+            include 'libs/**'
+        }
+        into 'dist/server'
+    }
+}
+
+// copia nella cartella dist/server/libs i file jar delle librerie di interesse  
+task copyServerLibFiles(type: Copy) {
+    serverSideProjects.collect {
+        project(it) { subproject -> 
+            from subproject.configurations.libs  
+            include '**'
+        }
+        into 'dist/server/libs'
+    }
+}
+
+task copyServerScripts(type: Copy) {
+    from 'scripts/server' 
+    into 'dist/server'
+    rename { String fileName ->
+        fileName.replace('-TEMPLATE', '')
+    }
+    filter { String line -> 
+        line.replace('@@@WSROOT@@@', wsRoot)
+            .replace('@@@WSNAME@@@', wsName)
+            .replace('@@@WSSERVICE@@@', wsService)
+    }
+}
+
+task copyServerResources(type: Copy) {
+    from 'resources/server' 
+    into 'dist/server'
+}
+
+task serverDist(dependsOn: [copyServerJarFiles, copyServerLibFiles, copyServerScripts, copyServerResources]) {
+}
+
+/* 
+ * DISTRIBUZIONE e BUILD 
+ */ 
+
+task dist(dependsOn: [serverDist]) {
+}
+
+task build(dependsOn: dist) {
+}
+
+
+/*
+ * CLEAN 
+ * necessario perché il progetto principale non è un progetto Java 
+ */ 
+
+task deleteDist(type: Delete) {
+    def dirName = "dist"
+    delete dirName
+}
+
+task clean(dependsOn: deleteDist) {
+}

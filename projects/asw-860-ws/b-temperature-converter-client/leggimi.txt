@@ -1,0 +1,4 @@
+Client per un web service SOAP di esempio del W3C: 
+http://www.w3schools.com/xml/tempconvert.asmx?WSDL
+http://www.w3schools.com/xml/xml_services.asp
+

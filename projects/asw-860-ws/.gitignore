@@ -1,0 +1,12 @@
+# file e cartelle da ignorare TEMPORANEAMENTE 
+
+# file e cartelle da ignorare DEFINITIVAMENTE 
+
+**/generated-ws-client/ 
+
+/x*/ 
+/y*/ 
+/z*/ 
+
+ 
+

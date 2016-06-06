@@ -1,0 +1,5 @@
+Rilascia il web service SOAP Calculator Service 
+all'indirizzo http://10.11.1.101:8080/asw/ws/CalculatorService?wsdl
+
+Quest wsdl può essere scaricato come 
+curl -s -H "Accept:text/xml" --get http://10.11.1.101:8080/asw/ws/CalculatorService?wsdl

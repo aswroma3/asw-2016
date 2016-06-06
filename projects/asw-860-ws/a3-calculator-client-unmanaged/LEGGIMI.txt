@@ -1,0 +1,16 @@
+Variante del progetto precedente, che accede al ws in modo diverso 
+(senza iniezione della dipendeza e non come appclient ma come client semplice). 
+
+Dalla documentazione, tutti i client "managed" (come gli EJB, le servlet 
+o gli application client) dovrebbero preferire l'ALTRA soluzione, 
+con l'iniezione della dipendenze del WS con @WebServiceRef. 
+
+La soluzione usata in questo progetto è per gli oggetti "unmanaged", 
+come un semplice client java. 
+
+Per compilare questo client bisogna prima: 
+
+1) compilare e deployare LATO SERVER il web service di interesse 
+   (nota: wsimport è una utility di Java SE SDK) 
+2) compilare il client con gradle LATO CLIENT 
+   (deve essere visibile il file wsdl, dall'host vagrant potrebbe non esserlo) 

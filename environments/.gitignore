@@ -12,6 +12,7 @@
 /coreos/
 /docker-swarm-consul/
 /docker-swarm-token/
+/kafka/
 
 
 # file e cartelle da ignorare DEFINITIVAMENTE 

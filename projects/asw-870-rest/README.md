@@ -89,7 +89,7 @@ Per l'esecuzione del client per il servizio:
    a. nella cartella **a2-hello-client-curl**, 
       lo script `run-curl-client.sh` è un client CURL del servizio 
 
-   a. nella cartella **a3-hello-client-java**, 
+   b. nella cartella **a3-hello-client-java**, 
       lo script `dist/client/run-rest-client.sh` avvia un client Java del servizio 
 
 

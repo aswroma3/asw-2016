@@ -1,0 +1,9 @@
+Il web service CalculatorService viene rilasciato 
+all'indirizzo http://10.11.1.101:8080/asw/ws/CalculatorService?wsdl
+
+Per compilare questo client bisogna prima: 
+
+1) compilare e deployare LATO SERVER il web service di interesse 
+   (nota: wsimport è una utility di Java SE SDK) 
+2) compilare il client con gradle LATO CLIENT 
+   (deve essere visibile il file wsdl, dall'host vagrant potrebbe non esserlo) 
